@@ -56,6 +56,6 @@ This project is licensed under the [MIT License](LICENSE.txt) - Copyright (c) 20
 
 The code uses a very small portion of code derived from [Octokit.net.extensions](https://github.com/mirsaeedi/octokit.net.extensions) which is licensed under the MIT License - Copyright (c) 2018 Ehsan Mirsaeedi
 
-Besides using [Octokit.Net](https://github.com/octokit/octokit.net) as a dependency, the project also copied some files as well (with some changes) to facilitate Unit testing. Octokit.Net is lincesed under the MIT License - Copyright (c) 2023 GitHub, Inc.
+Besides using [Octokit.Net](https://github.com/octokit/octokit.net) as a dependency, the project also copied some files as well (with some changes) to facilitate Unit testing. Octokit.Net is licensed under the MIT License - Copyright (c) 2023 GitHub, Inc.
 
 The derivations are clearkly marked as such in the source code.
