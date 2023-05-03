@@ -1,0 +1,23 @@
+name: Deploy-DeployHours-Gate
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      gate-project-folder: 'DeployHours.Gate'      
+      function-name: ${{ vars.DEPLOYHOURS_GATE_APP_NAME }}
+      function-version: ${{ github.event.release.name  }}      
+      client-id: ${{ vars.DEPLOYHOURS_GATE_CLIENT_ID }}
+    secrets:      
+      tenant-id: ${{ secrets.DEPLOYHOURS_GATE_TENANT_ID }}
+      subscription-id: ${{ secrets.DEPLOYHOURS_GATE_SUBSCRIPTION_ID }}

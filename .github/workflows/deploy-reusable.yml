@@ -1,0 +1,112 @@
+name: Deploy Gate (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      function-name:
+        description: 'The function name to deploy the app to'
+        required: true
+        type: string
+      gate-project-folder:
+        description: 'The folder where the gate project is located (in the src folder) Eg: DeployHours.Gate'
+        required: true
+        type: string
+      function-version:
+        description: 'The version of the function to deploy'
+        required: false
+        type: string
+        default: '${{ github.repository }}-${{ github.sha }}'
+      client-id:
+        description: 'The client id of the service principal to use for deployment'
+        required: true
+        type: string
+    secrets:
+      tenant-id:
+        description: 'The tenant id of the service principal to use for deployment'
+        required: true
+      subscription-id:
+        description: 'The subscription id of the service principal to use for deployment'
+        required: true
+
+env:
+  CONFIGURATION: Release
+  FUNCTION_APP_NAME: '${{ inputs.function-name }}'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: src/${{ inputs.gate-project-folder}}/published
+  WORKING_DIRECTORY: src/${{ inputs.gate-project-folder}}
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: read
+      id-token: write
+
+    name: Build and Deploy
+
+    environment:
+      name: Prod-${{ inputs.function-name}}
+      url: ${{ steps.deployFunction.outputs.app-url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@v2
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      - name: Build
+        run: |
+          version=${{ inputs.function-version }}
+          if [ -z "$version" ]; then
+            version="${{ github.repository }}-${{ github.sha }}"
+          fi
+          echo "building version $version"
+          dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore /p:InformationalVersion="$version"
+      - name: Publish
+        run: |
+          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+
+      - name: Login to azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ inputs.client-id }}
+          tenant-id: ${{ secrets.tenant-id }}
+          subscription-id: ${{ secrets.subscription-id }}
+
+      # The next 2 steps are a workaround for:
+      # https://github.com/Azure/functions-action/issues/116
+      - name: Get ${{ env.FUNCTION_APP_NAME }} Id
+        id: getFunctionID
+        run: |
+          functionId=$(az resource list --resource-type Microsoft.Web/sites --query "[?kind=='functionapp' && name=='${{ env.FUNCTION_APP_NAME }}']|[0].id" --output tsv)
+          if [ -z "$functionId" ]; then
+            echo "Function App ${{ env.FUNCTION_APP_NAME }} not found"
+            echo "These are the available resources to the service principal:"
+            az resource list
+            exit 1
+          fi
+          echo "functionId=$functionId" >> $GITHUB_OUTPUT
+      - name: Retrieve publish profile for deployment
+        id: getPublishProfile
+        run: |
+          functionId="${{ steps.getFunctionID.outputs.functionId }}"
+          echo "getting publish profile for $functionId"
+          publishProfiles=$(az webapp deployment list-publishing-profiles --ids "$functionId" --xml)
+          echo "::add-mask::$publishProfiles"
+          echo "publishProfiles<<EOF" >> $GITHUB_OUTPUT
+          echo "$publishProfiles" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+      - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
+        uses: Azure/functions-action@v1
+        id: deployFunction
+        with:
+          publish-profile: ${{ steps.getPublishProfile.outputs.publishProfiles }}
+          app-name: ${{ env.FUNCTION_APP_NAME }}
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+

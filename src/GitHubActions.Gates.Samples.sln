@@ -1,0 +1,93 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logos", "Logos", "{95391D5F-3629-4164-8DB3-DB7DEA50A392}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy Hours Gate", "Deploy Hours Gate", "{F207C146-225E-4191-A68C-52E044F31432}"
+	ProjectSection(SolutionItems) = preProject
+		Logos\Deploy Hours Gate\Bosch-Color.png = Logos\Deploy Hours Gate\Bosch-Color.png
+		Logos\Deploy Hours Gate\GaudiStyle-BW.png = Logos\Deploy Hours Gate\GaudiStyle-BW.png
+		Logos\Deploy Hours Gate\GaudiStyle-Color.png = Logos\Deploy Hours Gate\GaudiStyle-Color.png
+		Logos\Deploy Hours Gate\GaudiStyle2-Color.png = Logos\Deploy Hours Gate\GaudiStyle2-Color.png
+		Logos\Deploy Hours Gate\PicassoStyle.png = Logos\Deploy Hours Gate\PicassoStyle.png
+		Logos\Deploy Hours Gate\PicassoStyle2-Color.png = Logos\Deploy Hours Gate\PicassoStyle2-Color.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Issues Gate", "Issues Gate", "{B3F5ED55-088A-4974-A066-F0E3350F3A6A}"
+	ProjectSection(SolutionItems) = preProject
+		Logos\Issues Gate\bosch.png = Logos\Issues Gate\bosch.png
+		Logos\Issues Gate\gaudi.png = Logos\Issues Gate\gaudi.png
+		Logos\Issues Gate\Picasso.png = Logos\Issues Gate\Picasso.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C4F1CD31-CDB3-4263-8D03-1BA946D5E126}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IaC", "IaC", "{B9423BD8-A911-40C3-B02F-39B36B344AD9}"
+	ProjectSection(SolutionItems) = preProject
+		IaC\DeployHours.bicep = IaC\DeployHours.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeployHours.Gate.Tests", "..\tests\DeployHours.Gate.Tests\DeployHours.Gate.Tests.csproj", "{8469C26E-9436-42CF-BA87-E37D3F3313F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Issues.Gate.Tests", "..\tests\Issues.Gate.Tests\Issues.Gate.Tests.csproj", "{FBF0570B-5473-467C-9DF0-F7D9924A086F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeployHours.Gate", "..\src\DeployHours.Gate\DeployHours.Gate.csproj", "{BF1FABA0-2509-43FD-97EA-E432197E0DBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.Gates.Framework", "..\src\GitHubActions.Gates.Framework\GitHubActions.Gates.Framework.csproj", "{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Issues.Gate", "..\src\Issues.Gate\Issues.Gate.csproj", "{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubActions.Gates.Framework.Tests", "..\tests\GitHubActions.Gates.Framework.Tests\GitHubActions.Gates.Framework.Tests.csproj", "{DBB09D83-9F68-4770-B644-078B40342D41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8469C26E-9436-42CF-BA87-E37D3F3313F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8469C26E-9436-42CF-BA87-E37D3F3313F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8469C26E-9436-42CF-BA87-E37D3F3313F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8469C26E-9436-42CF-BA87-E37D3F3313F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBF0570B-5473-467C-9DF0-F7D9924A086F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBF0570B-5473-467C-9DF0-F7D9924A086F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBF0570B-5473-467C-9DF0-F7D9924A086F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBF0570B-5473-467C-9DF0-F7D9924A086F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1FABA0-2509-43FD-97EA-E432197E0DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1FABA0-2509-43FD-97EA-E432197E0DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1FABA0-2509-43FD-97EA-E432197E0DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1FABA0-2509-43FD-97EA-E432197E0DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBB09D83-9F68-4770-B644-078B40342D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBB09D83-9F68-4770-B644-078B40342D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBB09D83-9F68-4770-B644-078B40342D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBB09D83-9F68-4770-B644-078B40342D41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F207C146-225E-4191-A68C-52E044F31432} = {95391D5F-3629-4164-8DB3-DB7DEA50A392}
+		{B3F5ED55-088A-4974-A066-F0E3350F3A6A} = {95391D5F-3629-4164-8DB3-DB7DEA50A392}
+		{8469C26E-9436-42CF-BA87-E37D3F3313F9} = {C4F1CD31-CDB3-4263-8D03-1BA946D5E126}
+		{FBF0570B-5473-467C-9DF0-F7D9924A086F} = {C4F1CD31-CDB3-4263-8D03-1BA946D5E126}
+		{BF1FABA0-2509-43FD-97EA-E432197E0DBC} = {6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}
+		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA} = {6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}
+		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8} = {6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}
+		{DBB09D83-9F68-4770-B644-078B40342D41} = {C4F1CD31-CDB3-4263-8D03-1BA946D5E126}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0765483C-9038-4438-834A-76D8D4D3AB5B}
+	EndGlobalSection
+EndGlobal

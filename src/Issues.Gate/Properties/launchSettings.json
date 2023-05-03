@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Issues.Gate": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7154"
+    }
+  }
+}
