@@ -12,18 +12,25 @@ jobs:
       pull-requests: write
       actions: write
       checks: write
+      security-events: write
 
     name: Build and Test
-  
+
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
-      - name: Setup DotNet 
+      - name: Setup DotNet
         uses: actions/setup-dotnet@v3
         with:
           global-json-file: global.json
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: csharp
+          queries: +security-extended
 
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
@@ -33,6 +40,11 @@ jobs:
 
       - name: Unit Tests
         run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:csharp"
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
