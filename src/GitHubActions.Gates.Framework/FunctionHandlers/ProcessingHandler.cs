@@ -387,9 +387,13 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
         private Dictionary<string, object> CreateMetricProperties()
         {
+            var repository = GetRepository();
             return new Dictionary<string, object>
             {
-                { "Environment", webHookPayload!.environment }
+                { "Environment", webHookPayload!.environment },
+                { "RunId", GetRunID() },
+                { "Owner",  repository.Owner },
+                { "Repo", repository.Name}
             };
         }
     }
