@@ -20,7 +20,7 @@ namespace GitHubActions.Gates.Framework.Tests
             deployment_callback_url = "https://api.github.com/repos/octo/gates/actions/runs/4493385896/deployment_protection_rule",
             environment = "production",
             installation = new() { id = 0 },
-            repository = new() { name = "lisa", owner = new() { login = "mona" } }
+            repository = new() { full_name = "mona/lisa" , name = "lisa", owner = new() { login = "mona" } }
         };
 
         private static RepositoryContent CreateRepositoryContentFactory(string path, string content)
