@@ -1,12 +1,14 @@
 # GitHub Actions Gates Samples
 
+[![CI](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml/badge.svg)](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml)
+
 This project implements two [GitHub Actions protection rules](https://docs.github.com/en/actions/deployment/protecting-deployments/creating-custom-deployment-protection-rules) gates that can be used to gate the execution of a deployment to an environment using GitHub Actions. The gate will approve or reject the deployment based on the rules configured for the gate.
 
 Two gates are provided as samples:
 - **Deploy Hours gate** Configure a set of hours (and optionally days) when deployments are allowed, if a deployment is triggered outside of the configured hours the gate will postpone the (automatic) approval until the next allowed time.
 - **Issues Gate** The gate is define by a query and or a search condition on GitHub. If one the conditions return more than X results the gate will reject the deployment, otherwise it will allow it.
 
-![](docs/issue-gates-protection-rule.png)
+![gate example](docs/issue-gates-protection-rule.png)
 
 ## Objectives
 
