@@ -46,6 +46,10 @@ See the [configuration guide](docs/Configuration.md) for instructions on how to 
 
 If you'd like to contribute to this project, please fork the repository and submit a pull request. We welcome contributions of all kinds, including bug fixes, feature requests, and documentation improvements.
 
+The code should have appropriate unit tests. The tests are run as part of the CI pipeline and must pass before a pull request can be merged.
+
+Code with warnings are now allowed. The CI pipeline will fail if the code has warnings.
+
 ## Image Credits
 
 In the [logos](logos) folder you'll find a few logos that may be used in your GitHub Apps. 
