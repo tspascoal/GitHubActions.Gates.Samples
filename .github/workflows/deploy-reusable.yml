@@ -34,6 +34,9 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: src/${{ inputs.gate-project-folder}}/published
   WORKING_DIRECTORY: src/${{ inputs.gate-project-folder}}
 
+permissions:
+  contents: read
+
 jobs:
   build-and-deploy:
     permissions:

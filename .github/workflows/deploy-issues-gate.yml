@@ -7,16 +7,19 @@ on:
 
 permissions:
   contents: read
-  id-token: write   
 
 jobs:
   build-and-deploy:
     name: Build and Deploy
+    permissions:
+      contents: read
+      id-token: write
+
     uses: ./.github/workflows/deploy-reusable.yml
     with:
-      gate-project-folder: 'Issues.Gate'      
+      gate-project-folder: 'Issues.Gate'
       function-name: ${{ vars.ISSUES_GATE_APP_NAME }}
-      function-version: ${{ github.event.release.name  }}      
+      function-version: ${{ github.event.release.name  }}
       client-id: ${{ vars.ISSUES_GATE_CLIENT_ID }}
     secrets:
       tenant-id: ${{ secrets.ISSUES_GATE_TENANT_ID }}
