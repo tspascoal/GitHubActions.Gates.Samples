@@ -1,6 +1,6 @@
 # GitHub Actions Gates Samples
 
-[![CI](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml/badge.svg)](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml)
+[![CI](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml/badge.svg)](https://github.com/tspascoal/GitHubActions.Gates.Samples/actions/workflows/ci.yml) [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7301/badge)](https://bestpractices.coreinfrastructure.org/projects/7301)
 
 This project implements two [GitHub Actions protection rules](https://docs.github.com/en/actions/deployment/protecting-deployments/creating-custom-deployment-protection-rules) gates that can be used to gate the execution of a deployment to an environment using GitHub Actions. The gate will approve or reject the deployment based on the rules configured for the gate.
 
