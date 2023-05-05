@@ -41,7 +41,9 @@ jobs:
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
       - name: sonar begin
-        run: dotnet sonarscanner begin \
+        run: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.13.0
+          dotnet sonarscanner begin \
           /o:${{ vars.SONAR_ORG }} \
           /k:GitHubActions.Gates.Samples \
           /d:sonar.host.url=https://sonarcloud.io      
