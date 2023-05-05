@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          fetch-depth: 0
 
       - name: Setup DotNet
         uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a
@@ -45,7 +47,7 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner --version 5.13.0
           dotnet sonarscanner begin \
           /o:${{ vars.SONAR_ORG }} \
-          /k:GitHubActions.Gates.Samples \
+          /k:tspascoal_GitHubActions.Gates.Samples \
           /d:sonar.host.url=https://sonarcloud.io      
 
       - name: Build
