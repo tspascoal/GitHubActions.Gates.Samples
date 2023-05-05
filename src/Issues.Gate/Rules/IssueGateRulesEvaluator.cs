@@ -145,7 +145,7 @@ namespace Issues.Gate.Rules
 
         private static string Pluralize(string text, int nrIssues)
         {
-            return nrIssues == 0 || nrIssues > 1 ? $"{text}s" : text;
+            return nrIssues == 1 ? text : $"{text}s";
         }
     }
 }
