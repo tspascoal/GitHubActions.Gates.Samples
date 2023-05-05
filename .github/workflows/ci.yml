@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          fetch-depth: 0
 
       - name: Setup DotNet
         uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a
@@ -40,10 +42,20 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
+      - name: sonar begin
+        if: github.actor != 'dependabot[bot]'      
+        run: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.13.0
+          dotnet sonarscanner begin \
+          /o:${{ vars.SONAR_ORG }} \
+          /k:tspascoal_GitHubActions.Gates.Samples \
+          /d:sonar.host.url=https://sonarcloud.io      
+
       - name: Build
         run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
 
       - name: Unit Tests
+        if: github.actor != 'dependabot[bot]'      
         run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
 
       - name: Perform CodeQL Analysis
@@ -88,3 +100,11 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
+
+      - name: sonar end
+        if: github.actor != 'dependabot[bot]'
+        run: dotnet sonarscanner end
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
