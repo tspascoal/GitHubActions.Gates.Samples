@@ -34,9 +34,9 @@ namespace Issues.Gate
             var rules = new IssueGateRulesEvaluator(GitHubClient, GateConfiguration);
 
             // Evaluate the rule. If it fails with an exception the base handler will take care rejecting the gate
-            await rules.ValidateRules(webhook.environment, GetRepository(), GetRunID());
+            var comment = await rules.ValidateRules(webhook.environment, GetRepository(), GetRunID());
 
-            await Approve(); // If we reached this point and no exception has been thrown, then we will approve it
+            await Approve(comment); // If we reached this point and no exception has been thrown, then we will approve it
         }
     }
 }
