@@ -19,8 +19,9 @@ namespace Issues.Gate.Rules
             _configuration = configuration;
         }
 
-        public async Task ValidateRules(string Environment, Repo Repository, long RunId)
+        public async Task<string> ValidateRules(string Environment, Repo Repository, long RunId)
         {
+            StringBuilder comment = new("Evaluated Rules:\n");
             var rule = _configuration.GetRule(Environment) ?? throw new RejectException($"No rule found for {Environment} environment");
 
             DateTime? workflowCreatedAt = null;
@@ -91,6 +92,8 @@ namespace Issues.Gate.Rules
                             throw new RejectException(rule.Issues.Message);
                         }
                     }
+
+                    comment.AppendLine($"- **Issues** found **{nrIssues}** {Pluralize("issue", nrIssues)} {BelowEqualThresholdText(nrIssues, rule.Issues.MaxAllowed)}.");
                 }
                 catch (GraphQLException e)
                 {
@@ -123,13 +126,16 @@ namespace Issues.Gate.Rules
                             throw new RejectException(rule.Search.Message);
                         }
                     }
+
+                    comment.AppendLine($"- **Search** found **{nrIssues}** {Pluralize("issue", nrIssues)} {BelowEqualThresholdText(nrIssues, rule.Search.MaxAllowed)}.");
                 }
                 catch (GraphQLException e)
                 {
                     RejectWithErrors("Search", e);
                 }
-
             }
+
+            return comment.ToString();
         }
 
         private static void RejectWithErrors(string queryType, GraphQLException e)
@@ -146,6 +152,10 @@ namespace Issues.Gate.Rules
         private static string Pluralize(string text, int nrIssues)
         {
             return nrIssues == 1 ? text : $"{text}s";
+        }
+        private static string BelowEqualThresholdText(int nrIssues, int maxAllowed)
+        {
+            return $"which is {(nrIssues < maxAllowed ? "below" : "equal to")} threshold of **{maxAllowed}**";
         }
     }
 }
