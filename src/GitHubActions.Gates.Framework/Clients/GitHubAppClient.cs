@@ -209,10 +209,11 @@ namespace GitHubActions.Gates.Framework.Clients
                 try
                 {
                     var errors = responseData.errors;
-                    List<string> errorsResult = new ();
 
                     if (errors != null)
                     {
+                        List<string> errorsResult = new();
+
                         foreach (var error in errors)
                         {
                             errorsResult.Add((string)error.message);
@@ -223,7 +224,7 @@ namespace GitHubActions.Gates.Framework.Clients
                 }
                 catch (RuntimeBinderException)
                 {
-                    //  MyProperty doesn't exist
+                    //  errors property doesn't exist
                 }
             }
         }

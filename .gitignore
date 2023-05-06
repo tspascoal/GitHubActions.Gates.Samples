@@ -264,7 +264,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/src/DeployHours.Gate/DbgGetFile.cs
-/src/DeployHours.Gate/DbgApprove.cs
-/src/DeployHours.Gate/DbgGetFile.cs
-/src/DeployHours.Gate/DbgApprove.cs
+
+.vscode/

@@ -1,12 +1,12 @@
 ﻿#pragma warning disable CS8604 // Possible null reference argument.
-using GitHubActions.Gates.Framework.Tests.Mocks;
+using GitHubActions.TestHelpers.Mocks;
 using Octokit;
 using Octokit.Internal;
 using System.Net;
 
 // Adapted from https://github.com/octokit/octokit.net/blob/main/Octokit.Tests/Helpers/TestSetup.cs#L38
 
-namespace GitHubActions.Gates.Framework.Tests.Helpers
+namespace GitHubActions.TestHelpers
 {
     public static class OctokitResponseFactory
     {

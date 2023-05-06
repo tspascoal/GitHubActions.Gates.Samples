@@ -6,6 +6,7 @@ using Moq;
 using Octokit;
 using Newtonsoft.Json;
 using GitHubActions.Gates.Framework.Exceptions;
+using GitHubActions.TestHelpers;
 
 namespace GitHubActions.Gates.Framework.Tests
 {

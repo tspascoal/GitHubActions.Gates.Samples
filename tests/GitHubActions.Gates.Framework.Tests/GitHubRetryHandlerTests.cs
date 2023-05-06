@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Octokit.Internal;
 using System.ComponentModel.DataAnnotations;
 using Octokit;
-using GitHubActions.Gates.Framework.Exceptions;
+using GitHubActions.TestHelpers;
 
 namespace GitHubActions.Gates.Framework.Tests
 {

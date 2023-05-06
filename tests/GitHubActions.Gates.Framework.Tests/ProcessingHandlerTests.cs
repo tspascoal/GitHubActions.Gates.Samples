@@ -3,6 +3,7 @@ using GitHubActions.Gates.Framework.Exceptions;
 using GitHubActions.Gates.Framework.Models;
 using GitHubActions.Gates.Framework.Models.WebHooks;
 using GitHubActions.Gates.Framework.Tests.Helpers;
+using GitHubActions.TestHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -139,7 +140,6 @@ namespace GitHubActions.Gates.Framework.Tests
 
                 client.Verify(c => c.Reject(webHookPayload.deployment_callback_url, webHookPayload.environment, comment), Times.Once);
             }
-
         }
         public class LoadConfiguration
         {
