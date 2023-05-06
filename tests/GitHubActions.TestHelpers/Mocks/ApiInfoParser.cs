@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace GitHubActions.Gates.Framework.Tests.Mocks
+namespace GitHubActions.TestHelpers.Mocks
 {
     internal static class ApiInfoParser
     {

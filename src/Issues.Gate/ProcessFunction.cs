@@ -31,7 +31,7 @@ namespace Issues.Gate
         /// <returns></returns>
         protected override async Task Process(DeploymentProtectionRuleWebHook webhook)
         {
-            var rules = new IssueGateRulesEvaluator(GitHubClient, GateConfiguration);
+            var rules = new IssueGateRulesEvaluator(GitHubClient, Log, GateConfiguration);
 
             // Evaluate the rule. If it fails with an exception the base handler will take care rejecting the gate
             var comment = await rules.ValidateRules(webhook.environment, GetRepository(), GetRunID());

@@ -20,7 +20,7 @@ namespace GitHubActions.Gates.Framework.Tests
                 var queueName = "test-queue";
 
                 var sbCLientMock = new Mock<AZSB.ServiceBusClient>();
-                var sbClient = new ServiceBusClient(Factories.CreateServiceBusConfigMock().Object, sbCLientMock.Object);
+                var sbClient = new ServiceBusClient(FrameworkFactories.CreateServiceBusConfigMock().Object, sbCLientMock.Object);
                 var senderMock = new Mock<AZSB.ServiceBusSender>();
 
                 var message = new EventMessage
@@ -53,7 +53,7 @@ namespace GitHubActions.Gates.Framework.Tests
                 var queueName = "test-queue";
 
                 var sbCLientMock = new Mock<AZSB.ServiceBusClient>();
-                var sbClient = new ServiceBusClient(Factories.CreateServiceBusConfigMock().Object, sbCLientMock.Object);
+                var sbClient = new ServiceBusClient(FrameworkFactories.CreateServiceBusConfigMock().Object, sbCLientMock.Object);
                 var senderMock = new Mock<AZSB.ServiceBusSender>();
 
                 var message = new EventMessage
@@ -92,7 +92,7 @@ namespace GitHubActions.Gates.Framework.Tests
             {
                 // This is just an heuristic. Unfortunately there is no way to know if we are using a managed identity
                 // from the client (unless we looked at private data)
-                var configMock = Factories.CreateServiceBusConfigMock(connectionString: "Endpoint=sb://serviceconnection.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=1234567890");
+                var configMock = FrameworkFactories.CreateServiceBusConfigMock(connectionString: "Endpoint=sb://serviceconnection.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=1234567890");
 
                 var sb = new ServiceBusClient(configMock.Object);
 
@@ -106,7 +106,7 @@ namespace GitHubActions.Gates.Framework.Tests
             {
                 // This is just an heuristic. Unfortunately there is no way to know if we are using a managed identity
                 // from the client (unless we looked at private data)
-                var configMock = Factories.CreateServiceBusConfigMock(fullyQualifiedNamespace: "managed.servicebus.windows.net");
+                var configMock = FrameworkFactories.CreateServiceBusConfigMock(fullyQualifiedNamespace: "managed.servicebus.windows.net");
 
 
                 var sb = new ServiceBusClient(configMock.Object);

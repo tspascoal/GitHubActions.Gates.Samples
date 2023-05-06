@@ -1,5 +1,4 @@
 using Issues.Gate.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Issues.Gate.Tests
 {

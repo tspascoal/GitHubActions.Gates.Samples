@@ -35,13 +35,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeployHours.Gate.Tests", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Issues.Gate.Tests", "..\tests\Issues.Gate.Tests\Issues.Gate.Tests.csproj", "{FBF0570B-5473-467C-9DF0-F7D9924A086F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeployHours.Gate", "..\src\DeployHours.Gate\DeployHours.Gate.csproj", "{BF1FABA0-2509-43FD-97EA-E432197E0DBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeployHours.Gate", "DeployHours.Gate\DeployHours.Gate.csproj", "{BF1FABA0-2509-43FD-97EA-E432197E0DBC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.Gates.Framework", "..\src\GitHubActions.Gates.Framework\GitHubActions.Gates.Framework.csproj", "{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.Gates.Framework", "GitHubActions.Gates.Framework\GitHubActions.Gates.Framework.csproj", "{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Issues.Gate", "..\src\Issues.Gate\Issues.Gate.csproj", "{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Issues.Gate", "Issues.Gate\Issues.Gate.csproj", "{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubActions.Gates.Framework.Tests", "..\tests\GitHubActions.Gates.Framework.Tests\GitHubActions.Gates.Framework.Tests.csproj", "{DBB09D83-9F68-4770-B644-078B40342D41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.Gates.Framework.Tests", "..\tests\GitHubActions.Gates.Framework.Tests\GitHubActions.Gates.Framework.Tests.csproj", "{DBB09D83-9F68-4770-B644-078B40342D41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.TestHelpers", "..\tests\GitHubActions.TestHelpers\GitHubActions.TestHelpers.csproj", "{42681FEC-6CFD-4725-AA5C-668432BF7A31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{DBB09D83-9F68-4770-B644-078B40342D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBB09D83-9F68-4770-B644-078B40342D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBB09D83-9F68-4770-B644-078B40342D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42681FEC-6CFD-4725-AA5C-668432BF7A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42681FEC-6CFD-4725-AA5C-668432BF7A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42681FEC-6CFD-4725-AA5C-668432BF7A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42681FEC-6CFD-4725-AA5C-668432BF7A31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{25F02BF5-C62D-4CB4-AD7B-556BDEADD2AA} = {6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}
 		{E1550E55-A2B9-4BA1-B8FC-C8E3F8907CE8} = {6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}
 		{DBB09D83-9F68-4770-B644-078B40342D41} = {C4F1CD31-CDB3-4263-8D03-1BA946D5E126}
+		{42681FEC-6CFD-4725-AA5C-668432BF7A31} = {C4F1CD31-CDB3-4263-8D03-1BA946D5E126}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0765483C-9038-4438-834A-76D8D4D3AB5B}

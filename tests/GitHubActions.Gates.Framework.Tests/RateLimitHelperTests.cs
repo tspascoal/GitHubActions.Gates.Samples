@@ -2,6 +2,7 @@
 using GitHubActions.Gates.Framework.Exceptions;
 using GitHubActions.Gates.Framework.Helpers;
 using GitHubActions.Gates.Framework.Tests.Helpers;
+using GitHubActions.TestHelpers;
 using Moq;
 using Octokit;
 using System;

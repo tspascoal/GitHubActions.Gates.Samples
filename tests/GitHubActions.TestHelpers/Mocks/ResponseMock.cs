@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Net;
 
 
-namespace GitHubActions.Gates.Framework.Tests.Mocks
+namespace GitHubActions.TestHelpers.Mocks
 {
     internal class ResponseMock : IResponse
     {
