@@ -4,11 +4,13 @@ namespace Issues.Gate.Tests
 {
     public class IssuesConfigurationTests
     {
-        [Fact]
-        public void Load_DefaultRulesOnlyTrue()
+        public class Load
         {
-            var config = new IssuesConfiguration();
-            config.Load(@"Rules:
+            [Fact]
+            public void DefaultRulesOnlyTrue()
+            {
+                var config = new IssuesConfiguration();
+                config.Load(@"Rules:
 # Leave empty so the rule applies to any environment
 - Environment:
   Search:
@@ -16,21 +18,21 @@ namespace Issues.Gate.Tests
     Query: 'is:open is:issue label:bug'
 ");
 
-            Assert.NotNull(config);
-            Assert.NotNull(config.Rules);
-            Assert.Single(config.Rules);
-            Assert.Null(config.Rules[0].Environment);
-            Assert.NotNull(config.Rules[0].Search);
-            Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-        }
+                Assert.NotNull(config);
+                Assert.NotNull(config.Rules);
+                Assert.Single(config.Rules);
+                Assert.Null(config.Rules[0].Environment);
+                Assert.NotNull(config.Rules[0].Search);
+                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+            }
 
-        [Fact]
-        public void Load_EnvironmentRulesOnlyTrue()
-        {
+            [Fact]
+            public void EnvironmentRulesOnlyTrue()
+            {
 
-            var config = new IssuesConfiguration();
-            config.Load(@"Rules:
+                var config = new IssuesConfiguration();
+                config.Load(@"Rules:
 # Leave empty so the rule applies to any environment
 - Environment: production
   Search:
@@ -38,21 +40,21 @@ namespace Issues.Gate.Tests
     Query: 'is:open is:issue label:bug'
 ");
 
-            Assert.NotNull(config);
-            Assert.NotNull(config.Rules);
-            Assert.Single(config.Rules);
-            Assert.Equal("production", config.Rules[0].Environment);
-            Assert.NotNull(config.Rules[0].Search);
-            Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-        }
+                Assert.NotNull(config);
+                Assert.NotNull(config.Rules);
+                Assert.Single(config.Rules);
+                Assert.Equal("production", config.Rules[0].Environment);
+                Assert.NotNull(config.Rules[0].Search);
+                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+            }
 
-        [Fact]
-        public void Load_DefaultAndEnvironmentRulesTrue()
-        {
+            [Fact]
+            public void DefaultAndEnvironmentRulesTrue()
+            {
 
-            var config = new IssuesConfiguration();
-            config.Load(@"Rules:
+                var config = new IssuesConfiguration();
+                config.Load(@"Rules:
 # Leave empty so the rule applies to any environment
 - Environment:
   Search:
@@ -65,29 +67,29 @@ namespace Issues.Gate.Tests
     OnlyCreatedBeforeWorkflowCreated: true
 ");
 
-            Assert.NotNull(config);
-            Assert.NotNull(config.Rules);
-            Assert.Equal(2, config.Rules.Count);
+                Assert.NotNull(config);
+                Assert.NotNull(config.Rules);
+                Assert.Equal(2, config.Rules.Count);
 
-            Assert.Null(config.Rules[0].Environment);
-            Assert.NotNull(config.Rules[0].Search);
-            Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-            Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Null(config.Rules[0].Environment);
+                Assert.NotNull(config.Rules[0].Search);
+                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+                Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
 
-            Assert.Equal("production", config.Rules[1].Environment);
-            Assert.NotNull(config.Rules[1].Search);
-            Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
-            Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
-        }
+                Assert.Equal("production", config.Rules[1].Environment);
+                Assert.NotNull(config.Rules[1].Search);
+                Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
+                Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
+            }
 
-        [Fact]
-        public void Load_CompleteFile()
-        {
+            [Fact]
+            public void CompleteFile()
+            {
 
-            var config = new IssuesConfiguration();
-            config.Load(@"Rules:
+                var config = new IssuesConfiguration();
+                config.Load(@"Rules:
 # Leave empty so the rule applies to any environment
 - Environment:
   Search:
@@ -114,71 +116,76 @@ namespace Issues.Gate.Tests
     OnlyCreatedBeforeWorkflowCreated: true
 ");
 
-            Assert.NotNull(config);
-            Assert.NotNull(config.Rules);
-            Assert.Equal(2, config.Rules.Count);
+                Assert.NotNull(config);
+                Assert.NotNull(config.Rules);
+                Assert.Equal(2, config.Rules.Count);
 
-            Assert.Null(config.Rules[0].Environment);
-            Assert.NotNull(config.Rules[0].Search);
-            Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-            Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Null(config.Rules[0].Environment);
+                Assert.NotNull(config.Rules[0].Search);
+                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+                Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
 
-            Assert.Equal("production", config.Rules[1].Environment);
-            Assert.NotNull(config.Rules[1].Search);
-            Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
-            Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
-            Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
-            Assert.Equal(0, config.Rules[1].Issues.MaxAllowed);
-            Assert.Equal("OPEN", config.Rules[1].Issues.State);
-            Assert.Equal("mona/lisa", config.Rules[1].Issues.Repo);
-            Assert.Equal("octocat", config.Rules[1].Issues.Assignee);
-            Assert.Equal("octocat", config.Rules[1].Issues.Author);
-            Assert.Equal("mona/security", config.Rules[1].Issues.Mention);
-            Assert.Equal("1", config.Rules[1].Issues.Milestone);
-            Assert.Equal(2, config.Rules[1].Issues.Labels.Count);
-            Assert.Equal("BUG", config.Rules[1].Issues.Labels[0]);
-            Assert.Equal("show-stopper", config.Rules[1].Issues.Labels[1]);
-            Assert.True(config.Rules[1].Issues.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal("production", config.Rules[1].Environment);
+                Assert.NotNull(config.Rules[1].Search);
+                Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
+                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
+                Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(0, config.Rules[1].Issues.MaxAllowed);
+                Assert.Equal("OPEN", config.Rules[1].Issues.State);
+                Assert.Equal("mona/lisa", config.Rules[1].Issues.Repo);
+                Assert.Equal("octocat", config.Rules[1].Issues.Assignee);
+                Assert.Equal("octocat", config.Rules[1].Issues.Author);
+                Assert.Equal("mona/security", config.Rules[1].Issues.Mention);
+                Assert.Equal("1", config.Rules[1].Issues.Milestone);
+                Assert.Equal(2, config.Rules[1].Issues.Labels.Count);
+                Assert.Equal("BUG", config.Rules[1].Issues.Labels[0]);
+                Assert.Equal("show-stopper", config.Rules[1].Issues.Labels[1]);
+                Assert.True(config.Rules[1].Issues.OnlyCreatedBeforeWorkflowCreated);
+            }
+
         }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenRulesIsEmpty()
+        public class Validate
         {
 
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenRulesIsEmpty()
             {
-                Rules = new List<IssueGateRule>()
-            };
 
-            var errors = config.Validate();
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>()
+                };
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "Rules is mandatory" }, errors);
-        }
+                var errors = config.Validate();
 
-        [Fact]
-        public void Validate_ReturnsError_WhenRulesIsNull()
-        {
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "Rules is mandatory" }, errors);
+            }
 
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenRulesIsNull()
             {
-                Rules = null
-            };
 
-            var errors = config.Validate();
+                var config = new IssuesConfiguration
+                {
+                    Rules = null
+                };
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "Rules is mandatory" }, errors);
-        }
+                var errors = config.Validate();
 
-        [Fact]
-        public void Validate_ReturnsNoErrors_WhenConfigurationIsValid()
-        {
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "Rules is mandatory" }, errors);
+            }
 
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsNoErrors_WhenConfigurationIsValid()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -190,22 +197,73 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Empty(errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Empty(errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenIssuesMaxIsInvalid()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenIssuesMilestoneIsStar_Valid()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
+                    {
+                        new IssueGateRule
+                        {
+                            Environment = "dev",
+                            Issues = new ()
+                            {
+                                Milestone ="*"
+                            }
+                        }
+                    }
+                };
+
+                var errors = config.Validate();
+
+                Assert.NotNull(errors);
+                Assert.Empty(errors);
+            }
+
+            [Fact]
+            public void ReturnsError_WhenIssuesMilestoneIsNumber_Valid()
+            {
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
+                    {
+                        new IssueGateRule
+                        {
+                            Environment = "dev",
+                            Issues = new ()
+                            {
+                                Milestone ="234"
+                            }
+                        }
+                    }
+                };
+
+                var errors = config.Validate();
+
+                Assert.NotNull(errors);
+                Assert.Empty(errors);
+            }
+
+
+            [Fact]
+            public void ReturnsError_WhenIssuesMaxIsInvalid()
+            {
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -216,21 +274,21 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "MaxAllowed must be equal or greater than 0" }, errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "MaxAllowed must be equal or greater than 0" }, errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenIssuesRepoIsDefinedButEmpty()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenIssuesRepoIsDefinedButEmpty()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -241,21 +299,21 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "If Repo is specified it cannot be empty" }, errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "If Repo is specified it cannot be empty" }, errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenIssuesRepoIsInvalid()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenIssuesRepoIsInvalid()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -266,21 +324,21 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "Repo must be in format owner/repository" }, errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "Repo must be in format owner/repository" }, errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenIssuesRepoIsvalid()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenIssuesRepoIsvalid()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -291,21 +349,47 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Empty(errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Empty(errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenSearchMaxIsInvalid()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenIssuesMilestoeIsNotNumber()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
+                {
+                    new IssueGateRule
+                    {
+                        Environment = "dev",
+                        Issues = new ()
+                        {
+                            Repo = "octocat/mona-lisa",
+                            Milestone = "2w"
+                        }
+                    }
+                }
+                };
+
+                var errors = config.Validate();
+
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "Milestone needs to be either a number or *" }, errors);
+            }
+
+            [Fact]
+            public void ReturnsError_WhenSearchMaxIsInvalid()
+            {
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -317,21 +401,21 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "MaxAllowed must be equal or greater than 0" }, errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "MaxAllowed must be equal or greater than 0" }, errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenSearchIsInvalid_QueryEmpty()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenSearchIsInvalid_QueryEmpty()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -343,21 +427,21 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "Query must be specified" }, errors);
-        }
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "Query must be specified" }, errors);
+            }
 
-        [Fact]
-        public void Validate_ReturnsError_WhenSearchIsInvalid_MessageEmpty()
-        {
-
-            var config = new IssuesConfiguration
+            [Fact]
+            public void ReturnsError_WhenSearchIsInvalid_MessageEmpty()
             {
-                Rules = new List<IssueGateRule>
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
                 {
                     new IssueGateRule
                     {
@@ -370,12 +454,13 @@ namespace Issues.Gate.Tests
                         }
                     }
                 }
-            };
+                };
 
-            var errors = config.Validate();
+                var errors = config.Validate();
 
-            Assert.NotNull(errors);
-            Assert.Equal(new List<string> { "When Message is specified it cannot be empty" }, errors);
+                Assert.NotNull(errors);
+                Assert.Equal(new List<string> { "When Message is specified it cannot be empty" }, errors);
+            }
         }
     }
 }

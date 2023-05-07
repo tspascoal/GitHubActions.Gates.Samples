@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Text;
 using GitHubActions.Gates.Framework.Models;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
+
+// Needed for unit tests
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace Issues.Gate.Rules
 {
@@ -22,7 +26,7 @@ namespace Issues.Gate.Rules
             _log = log;
         }
 
-        public async Task<string> ValidateRules(string environment, Repo repository, long RunId)
+        public async virtual Task<string> ValidateRules(string environment, Repo repository, long RunId)
         {
             var rule = _configuration.GetRule(environment) ?? throw new RejectException($"No rule found for {environment} environment");
 
@@ -57,13 +61,13 @@ namespace Issues.Gate.Rules
             return comment.ToString();
         }
 
-        internal async Task ExecuteIssuesQuery(Repo Repository, IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
+        internal async virtual Task ExecuteIssuesQuery(Repo Repository, IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
         {
             var repo = rule.Issues.Repo != null ? new Repo(rule.Issues.Repo) : Repository;
 
             var graphQLQuery = $@"query($owner: String!, $repo: String!, $limit: Int, $states: [IssueState!] = OPEN, $assignee: String, $author: String, $mention: String, $milestone: String, $labels: [String!], $since: DateTime) {{
                         repository(owner: $owner, name: $repo) {{
-                            before: issues(first: $limit, states: $states, filterBy: {{ assignee: $assignee, createdBy: $author, mentioned: $mention, milestoneNumber: $milestone, labels: $labels}}) {{
+                            total: issues(first: $limit, states: $states, filterBy: {{ assignee: $assignee, createdBy: $author, mentioned: $mention, milestoneNumber: $milestone, labels: $labels}}) {{
                                       totalCount
                                     }}
                             after: issues(first: $limit, states: $states, filterBy: {{ since: $since, assignee: $assignee, createdBy: $author, mentioned: $mention, milestoneNumber: $milestone, labels: $labels}}) {{
@@ -72,27 +76,15 @@ namespace Issues.Gate.Rules
                         }}   
                     }}";
 
-            var parameters = new
-            {
-                owner = repo.Owner,
-                repo = repo.Name,
-                limit = 0,
-                states = rule.Issues.State,
-                assignee = rule.Issues.Assignee,
-                author = rule.Issues.Author,
-                mention = rule.Issues.Mention,
-                milestone = rule.Issues.Milestone ?? "*",
-                labels = rule.Issues.Labels,
-                since = workflowCreatedAt
-            };
+            object parameters = BuildIssuesQueryParameters(repo, rule.Issues, workflowCreatedAt);
 
             try
             {
                 dynamic response = await _client.GraphQLAsync(graphQLQuery, parameters);
 
-                int nrIssues = response.data.repository.before.totalCount;
+                int nrIssues = response.data.repository.total.totalCount;
 
-                _log.LogInformation($"IssuesQuery: Before {nrIssues} After {response.data.repository.after.totalCount} issues with max {rule.Issues.MaxAllowed}");
+                _log.LogInformation($"IssuesQuery: Total {nrIssues} After {response.data.repository.after.totalCount} issues with max {rule.Issues.MaxAllowed}");
 
                 if (rule.Issues.OnlyCreatedBeforeWorkflowCreated)
                 {
@@ -118,8 +110,7 @@ namespace Issues.Gate.Rules
                 RejectWithErrors("Issues", e);
             }
         }
-
-        internal async Task ExecuteSearchQuery(IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
+        internal async virtual Task ExecuteSearchQuery(IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
         {
             string query = BuildSearchQuery(rule, workflowCreatedAt);
 
@@ -160,6 +151,61 @@ namespace Issues.Gate.Rules
 
             return query;
         }
+
+        /// <summary>
+        /// Build the parameters for the Issues GraphQL query
+        /// 
+        /// Enforces the following semantic for milestones
+        /// <list type="bullet">
+        /// <item>If Milestone filter is specified then only issues with that given milestone are returned (use * for any milestone)</item>
+        /// <item>If Milestone filter is not specified then milestone value should be ignored(all other filter applies)</item>
+        /// </list>
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="issues"></param>
+        /// <param name="workflowCreatedAt"></param>
+        /// <returns></returns>
+        internal static object BuildIssuesQueryParameters(Repo repo, IssueGateIssues issues, DateTime? workflowCreatedAt)
+        {
+            // milestone filter is ONLY added when is not null
+
+            // Very ugly code that doesn't scale if we need to apply same logic to other fields.
+            // Dealing with expandos was not nicer
+
+            var parameters = new
+            {
+                owner = repo.Owner,
+                repo = repo.Name,
+                limit = 0,
+                states = issues.State,
+                assignee = issues.Assignee,
+                author = issues.Author,
+                mention = issues.Mention,
+                milestone = issues.Milestone,
+                labels = issues.Labels,
+                since = workflowCreatedAt
+            };
+
+            if (issues.Milestone == null)
+            {
+                // milestone is NOT added on purpose
+                return new
+                {
+                    parameters.owner,
+                    parameters.repo,
+                    parameters.limit,
+                    parameters.states,
+                    parameters.assignee,
+                    parameters.author,
+                    parameters.mention,
+                    parameters.labels,
+                    parameters.since
+                };
+            }
+
+            return parameters;
+        }
+
 
         private static void RejectWithErrors(string queryType, GraphQLException e)
         {
