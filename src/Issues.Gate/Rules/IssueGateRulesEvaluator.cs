@@ -159,6 +159,7 @@ namespace Issues.Gate.Rules
         /// <list type="bullet">
         /// <item>If Milestone filter is specified then only issues with that given milestone are returned (use * for any milestone)</item>
         /// <item>If Milestone filter is not specified then milestone value should be ignored(all other filter applies)</item>
+        /// <item>if Milestone filter is NONE then only issues with no milestones should be considered</item>
         /// </list>
         /// </summary>
         /// <param name="repo"></param>
@@ -181,7 +182,7 @@ namespace Issues.Gate.Rules
                 assignee = issues.Assignee,
                 author = issues.Author,
                 mention = issues.Mention,
-                milestone = issues.Milestone,
+                milestone = issues.Milestone == "NONE" ? null : issues.Milestone,
                 labels = issues.Labels,
                 since = workflowCreatedAt
             };

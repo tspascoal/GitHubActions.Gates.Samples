@@ -92,6 +92,19 @@ namespace Issues.Gate.Tests
             }
 
             [Fact]
+            public void MilestoneSetNone_MilestoneAddedButNull()
+            {
+                var issues = new IssueGateIssues()
+                {
+                    Milestone = "NONE"
+                };
+
+                dynamic parameters = IssueGateRulesEvaluator.BuildIssuesQueryParameters(new Repo("mona/lisa"), issues, null);
+
+                Assert.Null(parameters.milestone);
+            }
+
+            [Fact]
             public void MilestoneNotDefined_MilestoneNotAdded()
             {
                 var issues = new IssueGateIssues() { };

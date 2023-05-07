@@ -43,13 +43,9 @@ namespace Issues.Gate.Models
             {
                 errors.Add("If Mention is specified it cannot be empty");
             }
-            if (Milestone != null && string.IsNullOrWhiteSpace(Milestone))
+            if (Milestone != null && (Milestone != "NONE" && Milestone != "*" && !long.TryParse(Milestone, out long _)))
             {
-                errors.Add("If Milestone is specified it cannot be empty");
-            }
-            if (Milestone != null && (Milestone != "*" && !long.TryParse(Milestone, out long _)))
-            {
-                errors.Add("Milestone needs to be either a number or *");
+                errors.Add("Milestone needs to be either a number, * or NONE");
             }
             if (Message != null && string.IsNullOrWhiteSpace(Message))
             {

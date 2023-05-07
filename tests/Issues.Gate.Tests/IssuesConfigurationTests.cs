@@ -144,11 +144,29 @@ namespace Issues.Gate.Tests
                 Assert.True(config.Rules[1].Issues.OnlyCreatedBeforeWorkflowCreated);
             }
 
+            [Fact]
+            public void EmptyMilestone()
+            {
+                var config = new IssuesConfiguration();
+                config.Load(@"Rules:
+- Environment: production
+  Issues:
+    MaxAllowed: 0
+    Milestone:   
+");
+                Assert.NotNull(config);
+                Assert.NotNull(config.Rules);
+                Assert.Single(config.Rules);
+
+                Assert.Equal("production", config.Rules[0].Environment);
+                Assert.NotNull(config.Rules[0].Issues);
+                Assert.Equal(0, config.Rules[0].Issues.MaxAllowed);
+                Assert.Null(config.Rules[0].Issues.Milestone);
+            }
         }
 
         public class Validate
         {
-
             [Fact]
             public void ReturnsError_WhenRulesIsEmpty()
             {
@@ -220,6 +238,31 @@ namespace Issues.Gate.Tests
                             Issues = new ()
                             {
                                 Milestone ="*"
+                            }
+                        }
+                    }
+                };
+
+                var errors = config.Validate();
+
+                Assert.NotNull(errors);
+                Assert.Empty(errors);
+            }
+
+            [Fact]
+            public void ReturnsError_WhenIssuesMilestoneIsNone_Valid()
+            {
+
+                var config = new IssuesConfiguration
+                {
+                    Rules = new List<IssueGateRule>
+                    {
+                        new IssueGateRule
+                        {
+                            Environment = "dev",
+                            Issues = new ()
+                            {
+                                Milestone ="NONE"
                             }
                         }
                     }
@@ -380,7 +423,7 @@ namespace Issues.Gate.Tests
                 var errors = config.Validate();
 
                 Assert.NotNull(errors);
-                Assert.Equal(new List<string> { "Milestone needs to be either a number or *" }, errors);
+                Assert.Equal(new List<string> { "Milestone needs to be either a number, * or NONE" }, errors);
             }
 
             [Fact]

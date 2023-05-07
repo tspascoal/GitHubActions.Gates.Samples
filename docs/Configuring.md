@@ -105,9 +105,9 @@ The configuration for issues has the following attributes:
 - `Author` (Optional. String). The user to search for issues created by. If omitted author is not relevant.
 - `Mention` (Optional. String). The user or team to search for issues mentioned in. If omitted mention is not relevant.
 - `Milestone` (Optional. Integer). The milestone **number** (not name) to search for issues in. 
-  - If omitted milestone is not relevant, issues with or without a milestone will be considered.
+  - If omitted milestone (or empty) is not relevant, issues with or without a milestone will be considered.
   - Use `*` issues that have any milestone set.
-  - Leave blank to search for issues with no milestone.
+  - Use `NONE` to search for issues with no milestone.
 - `Labels` (Optional. Array of strings). The labels to search for issues with. If omitted labels are not relevant.
 - `OnlyCreatedBeforeWorkflowCreated` (optional. Boolean). If true only issues created before the workflow run was started will be considered. If false all issues will be considered.
 
