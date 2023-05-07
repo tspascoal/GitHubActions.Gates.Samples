@@ -16,7 +16,6 @@ namespace Issues.Gate.Models
         public string Milestone { get; set; }
         public List<string> Labels { get; set; }
         public string Message { get; set; }
-
         public bool OnlyCreatedBeforeWorkflowCreated { get; set; }
         public IList<string> Validate()
         {
@@ -44,9 +43,9 @@ namespace Issues.Gate.Models
             {
                 errors.Add("If Mention is specified it cannot be empty");
             }
-            if (Milestone != null && string.IsNullOrWhiteSpace(Milestone))
+            if (Milestone != null && (Milestone != "NONE" && Milestone != "*" && !long.TryParse(Milestone, out long _)))
             {
-                errors.Add("If Milestone is specified it cannot be empty");
+                errors.Add("Milestone needs to be either a number, * or NONE");
             }
             if (Message != null && string.IsNullOrWhiteSpace(Message))
             {
