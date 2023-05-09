@@ -191,6 +191,7 @@ The script will:
   - A reference to the connection string to access the storage account in Key Vault (both web jobs storage and content share storage).
   - Service Bus Namespace
   - Application Insights Instrumentation Key
+  - Optionally restricts the IP addresses to GitHub Webhooks IP addresses (Beware: If you enable this, you will have to guarantee they will be update if GitHub makes changes to webhooks IP addresses).
 - Adds the following variables to the repository (if repository specified) These variables are used to deploy the gates to the function app (see [Deploying the Gates](#deploying-the-gates):
   - `DEPLOYHOURS_GATE_CLIENT_ID`
   - `DEPLOYHOURS_GATE_APP_NAME`
@@ -250,6 +251,26 @@ Those values will need to be stored in Repository:
 
 
 > **Note:* If configuring the Issues gate, use the prefix `ISSUES_GATE_` instead of `DEPLOYHOURS_GATE_` in the variable/secret names.
+
+#### IP Allow Lists
+
+If you have configured your [enterprise](https://docs.github.com/en/enterprise-cloud@latest/admin/configuration/configuring-your-enterprise/restricting-network-traffic-to-your-enterprise-with-an-ip-allow-list) or [Organization](https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization) IP allow lists, you will need to enable the Functions Outbound IP in Applications IP allow list.
+
+#### Restricting Access to the Function App
+
+The function gates are exposed to the internet therefore they can be called by anyone. If you configured the GitHub application with a secret the integrity of the request is guaranteed since the secret is used to sign the request and the code verifies the signature, so while the request is not tampered with, it can be still called by anyone if they know the URL, this may result in higher charges if someone decides to call the function app repeatedly.
+
+If you are worried about this scenario, access to the function app can be restricted by IP using Azure built-in features by setting up [App Service access restrictions](https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions) to guarantee that only request coming from GitHub will be allowed to call the function app.
+
+This can be configured by passing `--set-ip-restrictions` to the setup script. It will add the GitHub's WebHook IP ranges to the function app's access restrictions. The IP ranges are retrieved from the [GitHub Meta API](https://docs.github.com/en/rest/meta?apiVersion=2022-11-28#get-github-meta-information).
+
+Or you can configure an existing function app with the script `set-function-ip-restrictions.sh` (setup folder) by passing the resource group and the gate function name. (or do it manually on the portal, automate with the Azure CLI or Azure PowerShell).
+
+This script adds the IPs listed in the meta API with an `allow` access entry in the function access restrictions. It will remove any other IP (which have the `ghhook` name) that is not in the list. (this ensures IPs that you may have added manually are not removed). And it will add a deny all rule at the end.
+
+![access restrictions](function-access-restrictions.png)
+
+> **Warning** GitHub webhooks IPs may change over time, so you will need to ensure that the IP allow list is updated accordingly.
 
 ## Deploying the Gates
 

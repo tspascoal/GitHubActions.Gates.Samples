@@ -48,6 +48,18 @@ param certificate string
 @description('The webhook secret for the GitHub App')
 param webHookSecret string = ''
 
+@description('GitHub webhooks IP addresses.')
+param ghHooksIpAddresses array = []
+
+var additionalIpSecurityRestrictions = [for (ip,i) in ghHooksIpAddresses: {
+  ipAddress: ip
+  action: 'Allow'
+  tag: 'Default'
+  priority: 900
+  name: 'ghhook' // # keep this in sync with setup/set-function-ip-restrictions.sh
+  description: 'Allow request from GitHub.com webhooks'
+}]
+
 //////////////////////////////////////// Service Bus
 
 // You can use the same service bus for all gates.
@@ -147,7 +159,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   }
 }
 
-resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
+resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   name: functionAppName
   location: location
   kind: 'functionapp'
@@ -159,6 +171,8 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
     siteConfig: {
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
+      ipSecurityRestrictions: additionalIpSecurityRestrictions
+      ipSecurityRestrictionsDefaultAction: (length(additionalIpSecurityRestrictions) > 0 ? 'Deny' : 'Allow')
     }
     httpsOnly: true
   }
@@ -168,7 +182,7 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
 // Managed identities in service bus https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-managed-service-identity
 // SB triggers with managed identities https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus-trigger?tabs=python-v2%2Cin-process%2Cextensionv5&pivots=programming-language-csharp#identity-based-connections
 var serviceBusHost = split(uri(serviceBusNamespace.properties.serviceBusEndpoint,''), '/')[2]
-resource functionAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
+resource functionAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
   name: 'appsettings'
   parent: functionApp
   properties: {
@@ -187,6 +201,9 @@ resource functionAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
       GHAPP_WEBHOOKSECRET: '@Microsoft.KeyVault(SecretUri=${keyWebHookSecret.properties.secretUri})'
     }
 }
+
+
+// https://stackoverflow.com/questions/73748007/azure-bicep-additional-ip-restrictions
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
