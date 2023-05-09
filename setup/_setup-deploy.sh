@@ -64,10 +64,13 @@ Options:
                                     If not specified, you will need to manually generate the credentials necessary for deployment.
     --var-prefix                  : Prefix to use for the variables stored in the repo (default: [$VARPREFIX])
 
+    --set-ip-restrictions         : (flag) Set IP restrictions on the function app to only allow traffic from the GitHub hook IP addresses.
+                                    Fetches the values automatically from GitHub Meta API (default: false)
+
 Description:
 
 Examples:
-  ${COMMAND} -a 123 -k certificate.pem -g deployhours-gate
+  ${COMMAND} -a 123 -k certificate.pem -g deployhours-gate --set-ip-restrictions
   ${COMMAND} --app-id 123 --key-file certificate.pem -g deployhours-gate --function-name deployhours-gate-test --function-short-name deplyt --repo mona/lisa
 
 EOM
@@ -133,6 +136,10 @@ while [[ $# -gt 0 ]]; do
     --var-prefix)
       VARPREFIX=$2
       shift 2
+      ;;
+    --set-ip-restrictions)
+      SET_IP_RESTRICTION=true
+      shift
       ;;
     --) # end argument parsing
       shift
@@ -233,7 +240,7 @@ function validateRequirements()
 function printWarnings()
 {
   if [ -z "$REPO" ]; then
-    echo -e "${warn_color}Warning: You have ommited repo parameter. Will not generate a service principal.\n"
+    echo -e "${warn_color}Warning: You have ommited repo parameter. Will not generate a service principal."
     return
   fi
 }
@@ -350,6 +357,14 @@ echo -e "${info_color}  GitHub Application ID:\t\t $APP_ID"
 echo -e "${info_color}  GitHub Application Private Key:\t $KEY_FILE"
 echo ""
 
+hooksIps="[]"
+if [ "$SET_IP_RESTRICTION" == true ]; then  
+  hooksIps=$(gh api meta | jq -c .hooks)
+  echo -e "${info_color}  Setting IP restriction to ${yellow_color}$hooksIps${info_color}"
+else 
+  echo -e "${info_color}  Not setting IP restriction"
+fi
+echo ""
 deployOutput=$(az deployment group create --resource-group "$RG" \
     --template-file "${script_path}\..\IaC\Gate.bicep" \
     --query properties.outputs \
@@ -359,6 +374,7 @@ deployOutput=$(az deployment group create --resource-group "$RG" \
         appInsightsLocation="$APPINSIGHTS_LOCATION" GHApplicationId="$APP_ID" \
         certificate=@"$KEY_FILE" \
         webHookSecret="$WEBHOOK_SECRET" \
+        ghHooksIpAddresses="$hooksIps" \
     --query 'properties.outputs')
 
 echo 'Deployment Outputs:'
