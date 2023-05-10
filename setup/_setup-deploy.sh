@@ -276,7 +276,7 @@ createFederatedCredential() {
     echo -e "${warn_color}   Warning: The federated credential can only be used to deploy from $type"
     credential=$(jq -c -n '{name: $name ,issuer:"https://token.actions.githubusercontent.com",
             subject: $subject,
-            description:"$description", audiences: ["api://AzureADTokenExchange"]}' \
+            description: $description, audiences: ["api://AzureADTokenExchange"]}' \
         --arg subject "$subject" \
         --arg name "$federatedcredentialname" \
         --arg description "$description")
