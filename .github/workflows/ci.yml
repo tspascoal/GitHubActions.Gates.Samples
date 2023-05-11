@@ -37,7 +37,7 @@ jobs:
         uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
         with:
           languages: csharp
-          queries: +security-extended
+          queries: +security-extended,security-experimental,security-and-quality
 
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
