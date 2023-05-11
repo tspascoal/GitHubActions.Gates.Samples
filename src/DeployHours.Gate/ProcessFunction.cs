@@ -37,9 +37,9 @@ namespace DeployHours.Gate
         /// If in deploy hours, approve otherwise delay the approval until next deploy hour
         ///
         /// </summary>
-        /// <param name="webhook"></param>
+        /// <param name="payload"></param>
         /// <returns></returns>
-        protected override async Task Process(DeploymentProtectionRuleWebHook webhook)
+        protected override async Task Process(DeploymentProtectionRuleWebHook payload)
         {
             var rules = RulesFactory(GateConfiguration);
 
@@ -49,14 +49,14 @@ namespace DeployHours.Gate
                 return;
             }
 
-            if (rules.IsDeployHour(DateTime.UtcNow, webhook.environment))
+            if (rules.IsDeployHour(DateTime.UtcNow, payload.environment))
             {
                 await Approve();
                 return;
             }
 
             // Not in deploy hours. Lets calculate the next deploy hour and delay the approval until then
-            var approvalTime = rules.GetNextDeployHour(DateTime.UtcNow, webhook.environment);
+            var approvalTime = rules.GetNextDeployHour(DateTime.UtcNow, payload.environment);
 
             // We (delay) approve first to avoid potential rate limits from the comment
             await Approve(null, approvalTime.ToUniversalTime());

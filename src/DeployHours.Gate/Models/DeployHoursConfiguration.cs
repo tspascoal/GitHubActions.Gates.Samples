@@ -54,7 +54,7 @@ namespace DeployHours.Gate.Models
         {
             var validatorErrors = new List<string>();
 
-            if(DeployDays?.Count() == 0)
+            if(DeployDays?.Length == 0)
             {
                 validatorErrors.Add("If DeployDays is defined it cannot be empty");
             }
@@ -84,7 +84,7 @@ namespace DeployHours.Gate.Models
             if (validatorErrors.Count > 0)
                 return validatorErrors;
 
-            return default;
+            return new List<string>();
         }
     }
 }

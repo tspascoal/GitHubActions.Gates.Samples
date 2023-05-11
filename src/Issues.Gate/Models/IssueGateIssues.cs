@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Issues.Gate.Models
 {
     public class IssueGateIssues
-    {
+    {        
         public int MaxAllowed { get; set; }
         public string Repo { get; set; }
         public string State { get; set; }
@@ -17,6 +17,7 @@ namespace Issues.Gate.Models
         public List<string> Labels { get; set; }
         public string Message { get; set; }
         public bool OnlyCreatedBeforeWorkflowCreated { get; set; }
+
         public IList<string> Validate()
         {
             var errors = new List<string>();
@@ -57,14 +58,14 @@ namespace Issues.Gate.Models
         private static void ValidateRepo(string repo, List<string> errors)
         {
             if (repo == null) return;
-
-            Regex regex = new(@"[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\/[a-zA-Z0-9-_]+$");
-
+            
             if (string.IsNullOrWhiteSpace(repo))
             {
                 errors.Add("If Repo is specified it cannot be empty");
             } else {
-                if (!regex.IsMatch(repo))
+                Regex repoRegex = new(@"[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\/[a-zA-Z0-9-_]+$", RegexOptions.Compiled, TimeSpan.FromSeconds(10));
+
+                if (!repoRegex.IsMatch(repo))
                 {
                     errors.Add("Repo must be in format owner/repository");
                 }

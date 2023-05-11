@@ -52,7 +52,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             webHookPayload = payload;
             Log = log;
         }
-        public ProcessingHandler(string GateName, string QueueName, string? ConfigFilePath = null)
+        protected ProcessingHandler(string GateName, string QueueName, string? ConfigFilePath = null)
         {
             Name = GateName;
             ProcessingQueueName = QueueName;
@@ -156,7 +156,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         /// <returns>True if the processing was delayed false otherwise</returns>
         private async Task<bool> TryApplyDelayIfConfigured()
         {
-            if (EventMessage.Delayed != false || GateConfiguration == null)
+            if (EventMessage.Delayed || GateConfiguration == null)
             {
                 return false;
             }

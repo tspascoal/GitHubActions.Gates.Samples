@@ -7,7 +7,7 @@ namespace GitHubActions.Gates.Framework
     {
         IList<string>? Validate();
         void Load(string yaml);
-        string GenerateMarkdownErrorList(IList<string>? errors);
+        string GenerateMarkdownErrorList(IList<string>? validationErrrors);
 
         R? GetRule(string Environment);
     }

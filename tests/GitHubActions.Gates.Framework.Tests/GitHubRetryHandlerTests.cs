@@ -53,7 +53,7 @@ namespace GitHubActions.Gates.Framework.Tests
                 await TestRetriesHelper(responses);
             }
 
-            private async Task TestRetriesHelper(IList<HttpResponseMessage> responses)
+            private async static Task TestRetriesHelper(IList<HttpResponseMessage> responses)
             {
                 var log = Factories.CreateLoggerMock();
 
