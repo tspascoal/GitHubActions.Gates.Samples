@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace GitHubActions.Gates.Framework
 {
-    public class Config
+    public static class Config
     {
         // If you change this values this will have impact on the app settings so it will break deployed functions.
         // Make sure the .bicep files are in synch with those as well

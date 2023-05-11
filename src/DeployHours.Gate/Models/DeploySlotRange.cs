@@ -5,8 +5,8 @@ namespace DeployHours.Gate.Models
 {
     public class DeploySlotRange
     {
-        public TimeOnly? Start;
-        public TimeOnly? End;
+        public TimeOnly? Start { get; set; }
+        public TimeOnly? End { get; set; }
 
         public List<string> Validate()
         {

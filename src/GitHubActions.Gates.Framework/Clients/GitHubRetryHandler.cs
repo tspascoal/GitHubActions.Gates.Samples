@@ -148,7 +148,6 @@ namespace GitHubActions.Gates.Framework.Clients
                     _logger.LogInformation($"Retrying request {retryNumber} of {maxRetries} after {sleepTime} seconds");
 
                     await Task.Delay((int)Math.Pow(sleepTime, retryNumber) * 1000);
-                    continue;
                 }
                 else
                 {

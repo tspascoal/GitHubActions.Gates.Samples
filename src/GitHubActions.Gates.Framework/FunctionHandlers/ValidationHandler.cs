@@ -13,6 +13,8 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         static readonly string[] settingsNamesList = new string[] { Config.GHAPPID, $"{Config.SERVICEBUSCONNECTIONNAME}:fullyQualifiedNamespace" };
         static readonly string[] secretNamesList = new string[] { Config.GHAPPPEMCERTIFICATENAME, Config.WEBHOOKSECRETNAME, Config.SERVICEBUSCONNECTIONNAME };
 
+        protected ValidationHandler() { }
+
         protected static async Task<ContentResult> Validate(HttpRequest req, ILogger log)
         {
             log.LogInformation("Validate Settings");
@@ -33,7 +35,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
                 StatusCode = 200
             };
         }
-        
+
         private static void GenerateSettingsList(StringBuilder htmlOutput, IConfigurationRoot config)
         {
             htmlOutput.Append("<h2>Configuration Settings</h2><table><tr><th>Name</th><th>Present</th><th>value</th><th>length</th></tr>");
@@ -83,24 +85,22 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             string installationValidation = "Skipped getting an installation token. Provide <strong>installId</strong> query string parameter to validate it as well.";
             if (!String.IsNullOrEmpty(installationId))
             {
+                installationValidation = "Installation token generated sucessfully";
+
+                try
                 {
-                    installationValidation = "Installation token generated sucessfully";
+                    var ghClient = new GitHubAppClient(long.Parse(installationId), log, config);
 
-                    try
+                    string? installationToken = await ghClient.GetInstallationToken();
+
+                    if (String.IsNullOrEmpty(installationToken))
                     {
-                        var ghClient = new GitHubAppClient(long.Parse(installationId), log, config);
-
-                        string? installationToken = await ghClient.GetInstallationToken();
-
-                        if (String.IsNullOrEmpty(installationToken))
-                        {
-                            installationValidation = "Couldn't generate an installation token. Please check the configuration values.";
-                        }
+                        installationValidation = "Couldn't generate an installation token. Please check the configuration values.";
                     }
-                    catch (Exception ex)
-                    {
-                        installationValidation = $"Couldn't generate an installation token: <strong>{ex.Message}</strong></br><br/>Tip: If it's the certificate make it's formatted in a single line with newlines escaped (local dev only)";
-                    }
+                }
+                catch (Exception ex)
+                {
+                    installationValidation = $"Couldn't generate an installation token: <strong>{ex.Message}</strong></br><br/>Tip: If it's the certificate make it's formatted in a single line with newlines escaped (local dev only)";
                 }
             }
             htmlBody.Append(installationValidation);

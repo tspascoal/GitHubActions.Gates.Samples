@@ -48,7 +48,7 @@ namespace DeployHours.Gate.Tests
             Assert.Single(config.Rules[0].DeploySlots);
             Assert.Equal(new TimeOnly(1, 46, 40), config.Rules[0].DeploySlots[0].Start);
             Assert.Equal(new TimeOnly(12, 43, 40), config.Rules[0].DeploySlots[0].End);
-            Assert.Null(config.Validate());
+            Assert.Empty(config.Validate());
         }
 
         [Fact]

@@ -27,14 +27,14 @@ namespace Issues.Gate
         /// If an exception is thrown it will be rejected. Otherwise it will be approved
         /// 
         /// </summary>
-        /// <param name="webhook"></param>
+        /// <param name="payload"></param>
         /// <returns></returns>
-        protected override async Task Process(DeploymentProtectionRuleWebHook webhook)
+        protected override async Task Process(DeploymentProtectionRuleWebHook payload)
         {
             var rules = new IssueGateRulesEvaluator(GitHubClient, Log, GateConfiguration);
 
             // Evaluate the rule. If it fails with an exception the base handler will take care rejecting the gate
-            var comment = await rules.ValidateRules(webhook.environment, GetRepository(), GetRunID());
+            var comment = await rules.ValidateRules(payload.environment, GetRepository(), GetRunID());
 
             await Approve(comment); // If we reached this point and no exception has been thrown, then we will approve it
         }

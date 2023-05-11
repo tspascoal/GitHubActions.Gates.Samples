@@ -10,9 +10,8 @@ namespace DeployHours.Gate
 {
     public class ValidateSettings : ValidationHandler
     {
-
         [FunctionName("ValidateSettings")]
-        public async Task<ContentResult> Run(
+        public async static Task<ContentResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
