@@ -19,7 +19,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         {
             log.LogInformation("Validate Settings");
 
-            IConfigurationRoot config = Config.GetConfig();
+            IConfiguration config = Config.GetConfig();
             StringBuilder htmlBody = new();
 
             GenerateSettingsList(htmlBody, config);
@@ -36,7 +36,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             };
         }
 
-        private static void GenerateSettingsList(StringBuilder htmlOutput, IConfigurationRoot config)
+        private static void GenerateSettingsList(StringBuilder htmlOutput, IConfiguration config)
         {
             htmlOutput.Append("<h2>Configuration Settings</h2><table><tr><th>Name</th><th>Present</th><th>value</th><th>length</th></tr>");
             foreach (var settingName in settingsNamesList)
@@ -52,7 +52,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             htmlOutput.Append("</table>");
         }
 
-        private static async Task GenerateRateLimit(StringBuilder htmlBody, IConfigurationRoot config, ILogger log, string installationId)
+        private static async Task GenerateRateLimit(StringBuilder htmlBody, IConfiguration config, ILogger log, string installationId)
         {
             if (!String.IsNullOrEmpty(installationId))
             {
@@ -80,7 +80,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             }
         }
 
-        private static async Task GenerateValidateInstallationToken(StringBuilder htmlBody, ILogger log, IConfigurationRoot config, string installationId)
+        private static async Task GenerateValidateInstallationToken(StringBuilder htmlBody, ILogger log, IConfiguration config, string installationId)
         {
             string installationValidation = "Skipped getting an installation token. Provide <strong>installId</strong> query string parameter to validate it as well.";
             if (!String.IsNullOrEmpty(installationId))
@@ -106,7 +106,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             htmlBody.Append(installationValidation);
         }
 
-        private static async Task GenerateAuthenticatedAppData(StringBuilder output, IConfigurationRoot config, ILogger log)
+        private static async Task GenerateAuthenticatedAppData(StringBuilder output, IConfiguration config, ILogger log)
         {
             var githubAppClient = new GitHubAppClient(0, log, config);
 

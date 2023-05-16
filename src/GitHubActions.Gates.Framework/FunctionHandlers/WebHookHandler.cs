@@ -31,7 +31,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            IConfigurationRoot config = Config.GetConfig();
+            IConfiguration config = Config.GetConfig();
 
             try
             {
@@ -114,7 +114,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
             return new OkResult();
         }
-        private static async Task<ActionResult> ProcessDeploymentProtectionRuleEvent(string processingQueueName, string? ghEvent, string? id, string requestBody, IConfigurationRoot config, ILogger log)
+        private static async Task<ActionResult> ProcessDeploymentProtectionRuleEvent(string processingQueueName, string? ghEvent, string? id, string requestBody, IConfiguration config, ILogger log)
         {
             var data = JsonConvert.DeserializeObject<DeploymentProtectionRuleWebHook>(requestBody);
 

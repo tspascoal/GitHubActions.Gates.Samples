@@ -29,9 +29,9 @@ vH+Zb2Zf802V1wc+twJAOXddfD8kwveNpOLlR3nyEWSTYdC0kstOoI62kqeYHcPz
 rC9V/EWOvIlFkDZ/FjONYvHBbfzbl0wFLPoZ5rFTaw==
 -----END RSA PRIVATE KEY-----";
 
-        public static Mock<IConfigurationRoot?> CreateConfigMock()
+        public static Mock<IConfiguration?> CreateConfigMock()
         {
-            var config = new Mock<IConfigurationRoot?>();
+            var config = new Mock<IConfiguration?>();
             config.SetupGet(c => c![Config.GHAPPPEMCERTIFICATENAME])
                   .Returns(pemPrivateKey);
             config.SetupGet(c => c![Config.GHAPPID])
