@@ -153,7 +153,7 @@ namespace GitHubActions.Gates.Framework.Tests
 
                 var log = Factories.CreateLoggerMock();
 
-                var config = new Mock<IConfigurationRoot?>();
+                var config = new Mock<IConfiguration?>();
 
                 var octoClientMock = new Mock<IGitHubClient>();
 
@@ -183,7 +183,7 @@ namespace GitHubActions.Gates.Framework.Tests
                 RepositoryContent expectedFile = CreateRepositoryContentFactory(TestableGate.ConfigFilePath, "invalid");
                 var log = Factories.CreateLoggerMock();
 
-                var config = new Mock<IConfigurationRoot?>();
+                var config = new Mock<IConfiguration?>();
 
                 var octoClientMock = new Mock<IGitHubClient>();
 
@@ -220,7 +220,7 @@ namespace GitHubActions.Gates.Framework.Tests
 
                 var expectedExceptionMessage = "Sorry I'm rejecting this. I can't proceed, couldn't retrieve the config file gateHelperProcessing.yml. Error: Resource not accessible by integration";
 
-                var config = new Mock<IConfigurationRoot?>();
+                var config = new Mock<IConfiguration?>();
 
                 var octoClientMock = new Mock<IGitHubClient>();
 
@@ -261,7 +261,7 @@ namespace GitHubActions.Gates.Framework.Tests
 
                 var expectedExceptionMessage = "Sorry I'm rejecting this. I can't proceed, couldn't retrieve the config file gateHelperProcessing.yml. Error: Not Found";
 
-                var config = new Mock<IConfigurationRoot?>();
+                var config = new Mock<IConfiguration?>();
 
                 var octoClientMock = new Mock<IGitHubClient>();
 
@@ -303,7 +303,7 @@ namespace GitHubActions.Gates.Framework.Tests
 
                 var expectedExceptionMessage = "Config file [gateHelperProcessing.yml](https://github.com/mona/lisa/down) is not valid:\n- Rules Cannot Be Empty\n- Rules Is required\n\n";
 
-                var config = new Mock<IConfigurationRoot?>();
+                var config = new Mock<IConfiguration?>();
 
                 var octoClientMock = new Mock<IGitHubClient>();
 

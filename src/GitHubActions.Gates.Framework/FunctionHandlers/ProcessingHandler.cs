@@ -19,7 +19,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         protected virtual string Name { get; }
         protected virtual T GateConfiguration { get; private set; }
         protected IGitHubAppClient GitHubClient { get; private set; }
-        protected IConfigurationRoot FunctionConfig { get; private set; }
+        protected IConfiguration FunctionConfig { get; private set; }
         protected virtual string? ConfigPath { get; }
         protected ILogger Log { get; set; }
 

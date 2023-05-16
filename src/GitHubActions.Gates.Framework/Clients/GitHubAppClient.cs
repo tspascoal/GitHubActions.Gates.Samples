@@ -22,7 +22,7 @@ namespace GitHubActions.Gates.Framework.Clients
 {
     public class GitHubAppClient : IGitHubAppClient
     {
-        readonly IConfigurationRoot? _config;
+        readonly IConfiguration? _config;
         string _installationToken;
         readonly long _installationId;
         readonly ILogger _log;
@@ -34,7 +34,7 @@ namespace GitHubActions.Gates.Framework.Clients
         private const string AcceptValue = "application/vnd.github+json";
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public GitHubAppClient(long installationId, ILogger logger, IConfigurationRoot? config = null)
+        public GitHubAppClient(long installationId, ILogger logger, IConfiguration? config = null)
 
         {
             _config = config ?? Config.GetConfig();
@@ -42,7 +42,7 @@ namespace GitHubActions.Gates.Framework.Clients
             _log = logger;
         }
 
-        internal GitHubAppClient(IGitHubClient octokit, long installationId, ILogger logger, IConfigurationRoot? config = null) : this(installationId, logger, config)
+        internal GitHubAppClient(IGitHubClient octokit, long installationId, ILogger logger, IConfiguration? config = null) : this(installationId, logger, config)
         {
             _octoKit = octokit;
             _octoKitJWT = octokit;
