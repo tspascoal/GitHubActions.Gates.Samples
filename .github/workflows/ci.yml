@@ -43,19 +43,18 @@ jobs:
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
       - name: sonar begin
-        if: github.actor != 'dependabot[bot]'      
+        if: github.actor != 'dependabot[bot]'
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.13.0
           dotnet sonarscanner begin \
           /o:${{ vars.SONAR_ORG }} \
           /k:tspascoal_GitHubActions.Gates.Samples \
-          /d:sonar.host.url=https://sonarcloud.io      
+          /d:sonar.host.url=https://sonarcloud.io
 
       - name: Build
         run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
 
       - name: Unit Tests
-        if: github.actor != 'dependabot[bot]'      
         run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
 
       - name: Perform CodeQL Analysis
@@ -74,6 +73,7 @@ jobs:
           deduplicate_classes_by_file_name: false
 
       - name: Merge coverage reports
+        if: always() && github.actor != 'dependabot[bot]'
         run: |
           dotnet tool install --global dotnet-coverage
           cd coverage
@@ -107,4 +107,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  
+
