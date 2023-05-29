@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a
+        uses: actions/setup-dotnet@aa983c550dfda0d1722b6ac6aed55724ffacc6d3
         with:
           global-json-file: global.json
 
