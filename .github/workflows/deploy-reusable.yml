@@ -106,7 +106,7 @@ jobs:
           cat $GITHUB_OUTPUT
 
       - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
-        uses: Azure/functions-action@a7e1e59a4c0e4fac3a57f58a7ac3ece626d4a8a3
+        uses: Azure/functions-action@238dc3c45bb1b04e5d16ff9e75cddd1d86753bd6
         id: deployFunction
         with:
           publish-profile: ${{ steps.getPublishProfile.outputs.publishProfiles }}
