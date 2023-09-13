@@ -41,7 +41,7 @@ jobs:
         with:
           languages: ${{ env.codeqllang }}
           queries: +security-extended,security-experimental,security-and-quality
-          packs: +advanced-security/codeql-${{ env.codeqllang }}-extensions,advanced-security/codeql-${{ env.codeqllang }}
+          packs: +advanced-security/codeql-${{ env.codeqllang }}
 
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
