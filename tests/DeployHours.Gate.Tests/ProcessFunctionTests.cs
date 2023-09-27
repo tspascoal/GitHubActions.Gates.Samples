@@ -1,4 +1,5 @@
-﻿using DeployHours.Gate.Rules;
+﻿using DeployHours.Gate.Models;
+using DeployHours.Gate.Rules;
 using DeployHours.Gate.Tests.Helpers;
 using GitHubActions.Gates.Framework.Models;
 using GitHubActions.Gates.Framework.Models.WebHooks;
@@ -17,7 +18,7 @@ namespace DeployHours.Gate.Tests
             [Fact]
             public async Task ShouldReject_WhenInLockout()
             {
-                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(null); // No need for config. This is a mock
+                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(new DeployHoursConfiguration()); // No need for config. This is a mock
                 var deployHoursFunctionProcessMock = new Mock<DeployHoursGateTestableWrapper>(rulesEvaluatorMock.Object) { CallBase = true };
 
                 deployHoursFunctionProcessMock.Setup(s => s.Reject(It.IsAny<string>()))
@@ -34,7 +35,7 @@ namespace DeployHours.Gate.Tests
             [Fact]
             public async Task ShouldApprove_WhenInDeployHours()
             {
-                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(null); // No need for config. This is a mock
+                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(new DeployHoursConfiguration()); // No need for config. This is a mock
                 var deployHoursFunctionProcessMock = new Mock<DeployHoursGateTestableWrapper>(rulesEvaluatorMock.Object) { CallBase = true };
 
                 deployHoursFunctionProcessMock
@@ -53,7 +54,7 @@ namespace DeployHours.Gate.Tests
             [Fact]
             public async Task Should_AddCommentAndDelayApproval_WhenNotInDeployHours()
             {
-                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(null); // No need for config. This is a mock
+                var rulesEvaluatorMock = new Mock<DeployHoursRulesEvaluator>(new DeployHoursConfiguration()); // No need for config. This is a mock
                 var deployHoursFunctionProcessMock = new Mock<DeployHoursGateTestableWrapper>(rulesEvaluatorMock.Object) { CallBase = true };
 
                 deployHoursFunctionProcessMock

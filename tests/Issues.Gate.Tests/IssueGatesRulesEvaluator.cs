@@ -469,7 +469,8 @@ namespace Issues.Gate.Tests
                 };
                 var log = Factories.CreateLoggerMock();
 
-                var evaluatorMock = new Mock<IssueGateRulesEvaluator>(null, log.Object, configuration);
+                var appClientMock = new Mock<IGitHubAppClient>();
+                var evaluatorMock = new Mock<IssueGateRulesEvaluator>(appClientMock.Object, log.Object, configuration);
                 var repo = new Repo("mona/lisa");
 
                 evaluatorMock
@@ -511,7 +512,8 @@ namespace Issues.Gate.Tests
                 };
                 var log = Factories.CreateLoggerMock();
 
-                var evaluatorMock = new Mock<IssueGateRulesEvaluator>(null, log.Object, configuration);
+                var appClientMock = new Mock<IGitHubAppClient>();
+                var evaluatorMock = new Mock<IssueGateRulesEvaluator>(appClientMock.Object, log.Object, configuration);
                 var repo = new Repo("mona/lisa");
 
                 evaluatorMock
