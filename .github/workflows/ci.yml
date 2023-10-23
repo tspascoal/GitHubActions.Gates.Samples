@@ -45,7 +45,7 @@ jobs:
       - name: sonar begin
         if: github.actor != 'dependabot[bot]'
         run: |
-          dotnet tool install --global dotnet-sonarscanner --version 5.13.0
+          dotnet tool install --global dotnet-sonarscanner --version 5.14.0
           dotnet sonarscanner begin \
           /o:${{ vars.SONAR_ORG }} \
           /k:tspascoal_GitHubActions.Gates.Samples \
