@@ -17,7 +17,6 @@ jobs:
       contents: read
       pull-requests: write
       checks: write
-      security-events: write
 
     name: Build and Test
 
@@ -39,12 +38,6 @@ jobs:
           java-version: 17
           distribution: zulu
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
-        with:
-          languages: csharp
-          queries: +security-extended,security-experimental,security-and-quality
-
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
@@ -63,11 +56,6 @@ jobs:
       - name: Unit Tests
         run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@f31a31c052207cc13b328d6295c5b728bb49568c
-        with:
-          category: "/language:csharp"
-
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@f355d34d53ad4e7f506f699478db2dd71da9de5f
         if: always() && github.actor != 'dependabot[bot]'
@@ -83,13 +71,13 @@ jobs:
         run: |
           dotnet tool install --global dotnet-coverage
           cd coverage
-          dotnet-coverage merge -o ${{github.workspace}}/coverage/coverage-merged.xml -f cobertura -r coverage.cobertura.xml
+          dotnet-coverage merge -o "${{github.workspace}}/coverage/coverage-merged.xml" -f cobertura -r coverage.cobertura.xml
 
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95
         if: always() && github.actor != 'dependabot[bot]'
         with:
-          filename: coverage/coverage-merged.xml
+          filename: 'coverage/coverage-merged.xml'
           badge: true
           format: 'markdown'
           output: 'both'
@@ -114,3 +102,39 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  code-scan:
+    permissions:
+      contents: read
+      checks: write
+      security-events: write
+
+    name: Code Scanning
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 0
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with:
+          global-json-file: global.json
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          languages: csharp
+          queries: +security-extended,security-experimental,security-and-quality
+
+      - name: Restore dependencies
+        run: dotnet restore src/GitHubActions.Gates.Samples.sln
+
+      - name: Build
+        run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          category: "/language:csharp"
