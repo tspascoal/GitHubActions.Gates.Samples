@@ -80,6 +80,7 @@ jobs:
 
       - name: dbg
         run: |
+          find "${{github.workspace}}/coverage"
           ls -la ${{github.workspace}}/coverage
           ls -la "${{github.workspace}}/coverage/coverage-merged.xml"
           cat "${{github.workspace}}/coverage/coverage-merged.xml"
