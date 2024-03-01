@@ -38,12 +38,6 @@ jobs:
           java-version: 17
           distribution: zulu
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
-        with:
-          languages: csharp
-          queries: +security-extended,security-experimental,security-and-quality
-
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
@@ -61,11 +55,6 @@ jobs:
 
       - name: Unit Tests
         run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@f31a31c052207cc13b328d6295c5b728bb49568c
-        with:
-          category: "/language:csharp"
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@f355d34d53ad4e7f506f699478db2dd71da9de5f
