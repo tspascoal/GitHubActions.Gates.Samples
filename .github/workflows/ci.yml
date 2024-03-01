@@ -73,6 +73,11 @@ jobs:
           cd coverage
           dotnet-coverage merge -o "${{github.workspace}}/coverage/coverage-merged.xml" -f cobertura -r coverage.cobertura.xml
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/**  
+
       - name: dbg
         run: |
           ls -la ${{github.workspace}}/coverage
