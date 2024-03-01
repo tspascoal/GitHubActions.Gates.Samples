@@ -17,7 +17,6 @@ jobs:
       contents: read
       pull-requests: write
       checks: write
-      security-events: write
 
     name: Build and Test
 
@@ -114,3 +113,39 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  code-scan:
+    permissions:
+      contents: read
+      checks: write
+      security-events: write
+
+    name: Code Scanning
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 0
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with:
+          global-json-file: global.json
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          languages: csharp
+          queries: +security-extended,security-experimental,security-and-quality
+
+      - name: Restore dependencies
+        run: dotnet restore src/GitHubActions.Gates.Samples.sln
+
+      - name: Build
+        run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          category: "/language:csharp"
