@@ -75,6 +75,7 @@ jobs:
 
       - name: dbg
         run: |
+          ls -la ${{github.workspace}}/coverage
           ls -la "${{github.workspace}}/coverage/coverage-merged.xml"
           cat "${{github.workspace}}/coverage/coverage-merged.xml"
 
