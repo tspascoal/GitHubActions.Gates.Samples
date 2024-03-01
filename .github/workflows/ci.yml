@@ -71,13 +71,13 @@ jobs:
         run: |
           dotnet tool install --global dotnet-coverage
           cd coverage
-          dotnet-coverage merge -o ${{github.workspace}}/coverage/coverage-merged.xml -f cobertura -r coverage.cobertura.xml
+          dotnet-coverage merge -o "${{github.workspace}}/coverage/coverage-merged.xml" -f cobertura -r coverage.cobertura.xml
 
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95
         if: always() && github.actor != 'dependabot[bot]'
         with:
-          filename: coverage/coverage-merged.xml
+          filename: ${{github.workspace}}/coverage/coverage-merged.xml
           badge: true
           format: 'markdown'
           output: 'both'
