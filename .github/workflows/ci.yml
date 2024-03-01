@@ -77,7 +77,7 @@ jobs:
         uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95
         if: always() && github.actor != 'dependabot[bot]'
         with:
-          filename: ${{github.workspace}}/coverage/coverage-merged.xml
+          filename: ${{github.workspace}}/coverage/coverage-*.xml
           badge: true
           format: 'markdown'
           output: 'both'
