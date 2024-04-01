@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
 
       - name: Setup DotNet
         uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
@@ -74,7 +74,7 @@ jobs:
           dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
       - name: Login to azure
-        uses: azure/login@cb79c773a3cfa27f31f25eb3f677781210c9ce3d
+        uses: azure/login@8c334a195cbb38e46038007b304988d888bf676a
         with:
           client-id: ${{ inputs.client-id }}
           tenant-id: ${{ secrets.tenant-id }}
