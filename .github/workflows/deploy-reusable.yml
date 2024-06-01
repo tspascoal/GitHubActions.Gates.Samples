@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
 
       - name: Setup DotNet
         uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
@@ -74,7 +74,7 @@ jobs:
           dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
       - name: Login to azure
-        uses: azure/login@6b2456866fc08b011acb422a92a4aa20e2c4de32
+        uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a
         with:
           client-id: ${{ inputs.client-id }}
           tenant-id: ${{ secrets.tenant-id }}
@@ -106,7 +106,7 @@ jobs:
           cat $GITHUB_OUTPUT
 
       - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
-        uses: Azure/functions-action@238dc3c45bb1b04e5d16ff9e75cddd1d86753bd6
+        uses: Azure/functions-action@fd80521afbba9a2a76a99ba1acc07aff8d733d11
         id: deployFunction
         with:
           publish-profile: ${{ steps.getPublishProfile.outputs.publishProfiles }}
