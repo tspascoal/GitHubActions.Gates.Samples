@@ -11,7 +11,8 @@ updates:
         - '*'
 
   - package-ecosystem: "nuget"
-    directory: "/" # Location of package manifests
+    directories:
+      - 'src/**'
     rebase-strategy: disabled
     schedule:
       interval: "weekly"
