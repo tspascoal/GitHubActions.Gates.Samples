@@ -375,7 +375,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         /// <returns></returns>
         internal static string GetRunID(string? callbackUrl)
         {
-            if (callbackUrl == null) throw new ArgumentNullException(nameof(callbackUrl));
+            ArgumentNullException.ThrowIfNull(callbackUrl);
             if (String.IsNullOrWhiteSpace(callbackUrl)) throw new ArgumentException("Value cannot be empty", nameof(callbackUrl));
             // Get run id from callback url 
             // sample https://api.github.com/repos/monae/gates/actions/runs/4493385896/deployment_protection_rule
