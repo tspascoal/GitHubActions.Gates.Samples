@@ -13,7 +13,27 @@ namespace GitHubActions.Gates.Framework
     {
         public static void ValidateSignatureIfConfigured(IConfiguration config, ILogger log, HttpRequest req, string requestBody)
         {
-            string secret = config[Config.WEBHOOKSECRETNAME];
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            if (log is null)
+            {
+                throw new ArgumentNullException(nameof(log));
+            }
+
+            if (req is null)
+            {
+                throw new ArgumentNullException(nameof(req));
+            }
+
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                throw new ArgumentException($"'{nameof(requestBody)}' cannot be null or empty.", nameof(requestBody));
+            }
+
+            string? secret = config[Config.WEBHOOKSECRETNAME];
             if (!string.IsNullOrEmpty(secret))
             {
                 string? signature = req.Headers["X-Hub-Signature-256"].FirstOrDefault();

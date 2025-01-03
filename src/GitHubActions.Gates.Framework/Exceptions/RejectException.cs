@@ -13,9 +13,5 @@ namespace GitHubActions.Gates.Framework.Exceptions
         public RejectException(string message) : base(message)
         {
         }
-        protected RejectException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
     }
 }

@@ -186,8 +186,6 @@ resource functionAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
   name: 'appsettings'
   parent: functionApp
   properties: {
-      // AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
-      // WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
       AzureWebJobsStorage: '@Microsoft.KeyVault(SecretUri=${KeyFunctionStorageConnectionString.properties.secretUri})'
       AzureWebJobsDisableHomepage: 'true'
       WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(SecretUri=${KeyFunctionStorageConnectionString.properties.secretUri})'
@@ -195,15 +193,17 @@ resource functionAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
       FUNCTIONS_EXTENSION_VERSION : '~4'
       APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
       FUNCTIONS_WORKER_RUNTIME: functionWorkerRuntime
+      
+      // Support for .Net 8 in process (delete after migration to isolated)
+      // https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#functions_inproc_net8_enabled
+      FUNCTIONS_INPROC_NET8_ENABLED: 1
+
       SERVICEBUS_CONNECTION__fullyQualifiedNamespace: serviceBusHost
       GHAPP_ID: GHApplicationId
       GHAPP_PEMCERTIFICATE: '@Microsoft.KeyVault(SecretUri=${keyCertificate.properties.secretUri})'
       GHAPP_WEBHOOKSECRET: '@Microsoft.KeyVault(SecretUri=${keyWebHookSecret.properties.secretUri})'
     }
 }
-
-
-// https://stackoverflow.com/questions/73748007/azure-bicep-additional-ip-restrictions
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
