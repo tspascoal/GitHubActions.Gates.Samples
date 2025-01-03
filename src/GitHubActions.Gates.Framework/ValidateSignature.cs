@@ -13,25 +13,9 @@ namespace GitHubActions.Gates.Framework
     {
         public static void ValidateSignatureIfConfigured(IConfiguration config, ILogger log, HttpRequest req, string requestBody)
         {
-            if (config is null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
-
-            if (log is null)
-            {
-                throw new ArgumentNullException(nameof(log));
-            }
-
-            if (req is null)
-            {
-                throw new ArgumentNullException(nameof(req));
-            }
-
-            if (string.IsNullOrEmpty(requestBody))
-            {
-                throw new ArgumentException($"'{nameof(requestBody)}' cannot be null or empty.", nameof(requestBody));
-            }
+            ArgumentNullException.ThrowIfNull(config);
+            ArgumentNullException.ThrowIfNull(log);
+            ArgumentNullException.ThrowIfNullOrEmpty(requestBody);
 
             string? secret = config[Config.WEBHOOKSECRETNAME];
             if (!string.IsNullOrEmpty(secret))
