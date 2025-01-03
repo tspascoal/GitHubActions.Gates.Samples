@@ -70,8 +70,8 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         /// <exception cref="Exception"></exception>
         protected virtual async Task ProcessProcessing(EventMessage message, ILogger log)
         {
-            ArgumentNullException.ThrowIfNull(log, nameof(log));
-            ArgumentNullException.ThrowIfNull(message, nameof(message));
+            ArgumentNullException.ThrowIfNull(log);
+            ArgumentNullException.ThrowIfNull(message);
             
             Log = log;
             EventMessage = message;
