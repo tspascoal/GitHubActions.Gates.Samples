@@ -96,20 +96,9 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
         private static async Task GenerateValidateInstallationToken(StringBuilder htmlBody, ILogger log, IConfiguration config, string? installationId)
         {
-            if (htmlBody is null)
-            {
-                throw new ArgumentNullException(nameof(htmlBody));
-            }
-
-            if (log is null)
-            {
-                throw new ArgumentNullException(nameof(log));
-            }
-
-            if (config is null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
+            ArgumentNullException.ThrowIfNull(htmlBody, nameof(htmlBody));
+            ArgumentNullException.ThrowIfNull(log, nameof(log));
+            ArgumentNullException.ThrowIfNull(config, nameof(config));
 
             string installationValidation = "Skipped getting an installation token. Provide <strong>installId</strong> query string parameter to validate it as well.";
             if (!String.IsNullOrEmpty(installationId))
