@@ -2,7 +2,7 @@
   "profiles": {
     "Issues.Gate": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7154"
+      "commandLineArgs": "--port 7154 --dotnet"
     }
   }
 }

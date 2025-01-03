@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C4F1CD31
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IaC", "IaC", "{B9423BD8-A911-40C3-B02F-39B36B344AD9}"
 	ProjectSection(SolutionItems) = preProject
-		IaC\DeployHours.bicep = IaC\DeployHours.bicep
+		..\IaC\Gate.bicep = ..\IaC\Gate.bicep
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6ECBE735-BCA7-42FD-BC5F-285CCA6B9FD1}"
@@ -44,6 +44,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.Gates.Framework.Tests", "..\tests\GitHubActions.Gates.Framework.Tests\GitHubActions.Gates.Framework.Tests.csproj", "{DBB09D83-9F68-4770-B644-078B40342D41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubActions.TestHelpers", "..\tests\GitHubActions.TestHelpers\GitHubActions.TestHelpers.csproj", "{42681FEC-6CFD-4725-AA5C-668432BF7A31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9415E8C8-6331-4EFD-BF22-8172C0207DFF}"
+	ProjectSection(SolutionItems) = preProject
+		..\global.json = ..\global.json
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

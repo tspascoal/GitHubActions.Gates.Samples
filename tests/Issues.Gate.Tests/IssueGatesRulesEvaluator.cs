@@ -118,7 +118,7 @@ namespace Issues.Gate.Tests
         public class ExecuteSearchQuery
         {
             [Fact]
-            public async void OverThreshold_ThrowsRejectException()
+            public async Task OverThreshold_ThrowsRejectException()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -142,7 +142,7 @@ namespace Issues.Gate.Tests
             }
 
             [Fact]
-            public async void OverThreshold_CustomMessage_ThrowsRejectException()
+            public async Task OverThreshold_CustomMessage_ThrowsRejectException()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -165,9 +165,8 @@ namespace Issues.Gate.Tests
                 Assert.Equal("CustomMessage", exception.Message);
             }
 
-
             [Fact]
-            public async void EqualThreshold_AddsComment()
+            public async Task EqualThreshold_AddsComment()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -194,7 +193,7 @@ namespace Issues.Gate.Tests
             }
 
             [Fact]
-            public async void BelowThreshold_And_OnlyCreatedBeforeWorkflowCreatedTrue_AddsComment()
+            public async Task BelowThreshold_And_OnlyCreatedBeforeWorkflowCreatedTrue_AddsComment()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -242,7 +241,7 @@ namespace Issues.Gate.Tests
                     }}";
 
             [Fact]
-            public async void OverThresholdOnlyCreatedBeforeWorkflowCreatedFalse_ThrowsRejectException()
+            public async Task OverThresholdOnlyCreatedBeforeWorkflowCreatedFalse_ThrowsRejectException()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -279,7 +278,7 @@ namespace Issues.Gate.Tests
             }
 
             [Fact]
-            public async void OverThresholdOnlyCreatedBeforeWorkflowCreatedTrue_ThrowsRejectException()
+            public async Task OverThresholdOnlyCreatedBeforeWorkflowCreatedTrue_ThrowsRejectException()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -317,7 +316,7 @@ namespace Issues.Gate.Tests
 
 
             [Fact]
-            public async void OverThreshold_CustomMessage_ThrowsRejectException()
+            public async Task OverThreshold_CustomMessage_ThrowsRejectException()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -355,7 +354,7 @@ namespace Issues.Gate.Tests
 
 
             [Fact]
-            public async void EqualThreshold_AddsComment()
+            public async Task EqualThreshold_AddsComment()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();
@@ -395,7 +394,7 @@ namespace Issues.Gate.Tests
             }
 
             [Fact]
-            public async void BelowThreshold_And_OnlyCreatedBeforeWorkflowCreatedTrue_AddsComment()
+            public async Task BelowThreshold_And_OnlyCreatedBeforeWorkflowCreatedTrue_AddsComment()
             {
                 var log = Factories.CreateLoggerMock();
                 var comment = new StringBuilder();

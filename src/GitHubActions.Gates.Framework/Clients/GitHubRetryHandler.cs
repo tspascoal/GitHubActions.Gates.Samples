@@ -46,10 +46,7 @@ namespace GitHubActions.Gates.Framework.Clients
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             var httpResponse = await ExecuteWithRetryAsync(async () =>
             {

@@ -8,8 +8,5 @@ namespace GitHubActions.Gates.Framework.Exceptions
         public FatalException(string message) : base(message)
         {
         }
-        protected FatalException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }
