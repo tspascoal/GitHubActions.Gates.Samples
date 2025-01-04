@@ -50,6 +50,7 @@ The Deploy Hours gate requires the following permissions:
 The Issues gate requires the following permissions:
 - Repository Permissions:
   - Deployments - Read and Write
+  - Actions - Read
   - Issues - Read
   - Single File - Read Only
     - With the path `.github/issues-gate.yml`
