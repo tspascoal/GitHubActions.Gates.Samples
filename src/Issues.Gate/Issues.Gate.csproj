@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -18,5 +18,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+
+    <!-- Workaround for 
+      https://github.com/Azure/azure-functions-host/issues/10575 
+      https://github.com/Azure/azure-functions-host/issues/10567  
+    -->
+    <FunctionsPreservedDependencies Include="System.Memory.Data.dll" />
   </ItemGroup>
 </Project>

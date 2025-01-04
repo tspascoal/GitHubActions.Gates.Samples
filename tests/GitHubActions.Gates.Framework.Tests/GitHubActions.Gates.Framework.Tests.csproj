@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -11,12 +11,14 @@
 
   <ItemGroup>
     <Compile Remove="Helpers\**" />
+    <Compile Remove="Mocks\**" />
     <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Mocks\**" />
     <None Remove="Helpers\**" />
+    <None Remove="Mocks\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Helpers\AssertHelpers.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\FrameworkFactories.cs" />
     <Compile Include="Helpers\GitHubRetryHandlerTestable.cs" />
@@ -27,15 +29,15 @@
   <ItemGroup>
     <PackageReference Include="JunitXml.TestLogger" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="xunit" Version="2.7.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <PackageReference Include="coverlet.collector" Version="6.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -44,10 +46,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\GitHubActions.Gates.Framework\GitHubActions.Gates.Framework.csproj" />
     <ProjectReference Include="..\GitHubActions.TestHelpers\GitHubActions.TestHelpers.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mocks\" />
   </ItemGroup>
 
 </Project>

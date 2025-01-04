@@ -70,10 +70,11 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         /// <exception cref="Exception"></exception>
         protected virtual async Task ProcessProcessing(EventMessage message, ILogger log)
         {
-            if (log == null) throw new ArgumentNullException(nameof(log));
-            Log = log ?? throw new ArgumentNullException(nameof(log));
-
-            EventMessage = message ?? throw new ArgumentNullException(nameof(message));
+            ArgumentNullException.ThrowIfNull(log);
+            ArgumentNullException.ThrowIfNull(message);
+            
+            Log = log;
+            EventMessage = message;
 
             webHookPayload = message.WebHookPayload;
             if (webHookPayload == null)
@@ -374,7 +375,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
         /// <returns></returns>
         internal static string GetRunID(string? callbackUrl)
         {
-            if (callbackUrl == null) throw new ArgumentNullException(nameof(callbackUrl));
+            ArgumentNullException.ThrowIfNull(callbackUrl);
             if (String.IsNullOrWhiteSpace(callbackUrl)) throw new ArgumentException("Value cannot be empty", nameof(callbackUrl));
             // Get run id from callback url 
             // sample https://api.github.com/repos/monae/gates/actions/runs/4493385896/deployment_protection_rule

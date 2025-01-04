@@ -23,17 +23,30 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             StringBuilder htmlBody = new();
 
             GenerateSettingsList(htmlBody, config);
+            GenerateDotNetInfo(htmlBody);
 
-            await GenerateValidateInstallationToken(htmlBody, log, config, (string)req.Query["installId"]);
+            await GenerateValidateInstallationToken(htmlBody, log, config, (string?)req.Query["installId"]);
             await GenerateAuthenticatedAppData(htmlBody, config, log);
-            await GenerateRateLimit(htmlBody, config, log, (string)req.Query["installId"]);
+            await GenerateRateLimit(htmlBody, config, log, (string?)req.Query["installId"]);
 
             return new ContentResult()
             {
                 Content = $"<html><head></head><body>{htmlBody}</body></html>",
-                ContentType = "text/html",
+                ContentType = "text/html",                
                 StatusCode = 200
             };
+        }
+
+        private static void GenerateDotNetInfo(StringBuilder htmlOutput)
+        {
+            htmlOutput.Append("<h2>.NET</h2>");
+            htmlOutput.Append("<table>");
+            htmlOutput.Append("<tr><th>Property</th><th>Value</th></tr>");
+            htmlOutput.Append($"<tr><td>Version</td><td>{System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}</td></tr>");
+            htmlOutput.Append($"<tr><td>Runtime</td><td>{System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier}</td></tr>");
+            htmlOutput.Append($"<tr><td>Processor Arch</td><td>{System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}</td></tr>");
+            htmlOutput.Append($"<tr><td>OS</td><td>{System.Runtime.InteropServices.RuntimeInformation.OSDescription} ({System.Runtime.InteropServices.RuntimeInformation.OSArchitecture})</td></tr>");
+            htmlOutput.Append("</table>");
         }
 
         private static void GenerateSettingsList(StringBuilder htmlOutput, IConfiguration config)
@@ -52,15 +65,16 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             htmlOutput.Append("</table>");
         }
 
-        private static async Task GenerateRateLimit(StringBuilder htmlBody, IConfiguration config, ILogger log, string installationId)
+        private static async Task GenerateRateLimit(StringBuilder htmlBody, IConfiguration config, ILogger log, string? installationId)
         {
+            htmlBody.Append("<h2>Rate Limits</h2>");
+
             if (!String.IsNullOrEmpty(installationId))
             {
                 try
                 {
                     var ghClient = new GitHubAppClient(long.Parse(installationId), log, config);
-
-                    htmlBody.Append("<h2>Rate Limits</h2>");
+                    
                     var client = await ghClient.GetOCtokit();
                     var ratelimit = await client.RateLimit.GetRateLimits();
 
@@ -76,12 +90,16 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             }
             else
             {
-                htmlBody.Append("<br/>Skipped rate limits. Provide a <strong>installId</strong> query string parameter to get rate limits for an installation.");
+                htmlBody.Append("Skipped rate limits. Provide a <strong>installId</strong> query string parameter to get rate limits for an installation.");
             }
         }
 
-        private static async Task GenerateValidateInstallationToken(StringBuilder htmlBody, ILogger log, IConfiguration config, string installationId)
+        private static async Task GenerateValidateInstallationToken(StringBuilder htmlBody, ILogger log, IConfiguration config, string? installationId)
         {
+            ArgumentNullException.ThrowIfNull(htmlBody);
+            ArgumentNullException.ThrowIfNull(log);
+            ArgumentNullException.ThrowIfNull(config);
+
             string installationValidation = "Skipped getting an installation token. Provide <strong>installId</strong> query string parameter to validate it as well.";
             if (!String.IsNullOrEmpty(installationId))
             {
@@ -103,6 +121,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
                     installationValidation = $"Couldn't generate an installation token: <strong>{ex.Message}</strong></br><br/>Tip: If it's the certificate make it's formatted in a single line with newlines escaped (local dev only)";
                 }
             }
+            htmlBody.Append("<h2>Installation Token</h2>");
             htmlBody.Append(installationValidation);
         }
 
