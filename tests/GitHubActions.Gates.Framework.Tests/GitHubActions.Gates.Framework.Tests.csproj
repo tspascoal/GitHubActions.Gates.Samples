@@ -11,12 +11,14 @@
 
   <ItemGroup>
     <Compile Remove="Helpers\**" />
+    <Compile Remove="Mocks\**" />
     <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Mocks\**" />
     <None Remove="Helpers\**" />
+    <None Remove="Mocks\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Helpers\AssertHelpers.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\FrameworkFactories.cs" />
     <Compile Include="Helpers\GitHubRetryHandlerTestable.cs" />
@@ -44,10 +46,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\GitHubActions.Gates.Framework\GitHubActions.Gates.Framework.csproj" />
     <ProjectReference Include="..\GitHubActions.TestHelpers\GitHubActions.TestHelpers.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mocks\" />
   </ItemGroup>
 
 </Project>
