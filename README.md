@@ -51,6 +51,18 @@ The provided bicep files, sets the necessary settings.
 
 See the [configuration guide](docs/Configuration.md) for instructions on how to configure the gates.
 
+## Known Issues
+
+With .NET 8 in-process model, Azure Functions are (currently) failing with a ` Could not load file or assembly 'System.Memory.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=...'. because of some Azure Nuget packages.
+
+This is currently documented in Azure Function open issues [#1](https://github.com/Azure/azure-functions-host/issues/10575) and [#2](https://github.com/Azure/azure-functions-host/issues/10567), as a workaround the functions `.csproj` have this setting configured 
+
+```xml
+  <ItemGroup>
+    <FunctionsPreservedDependencies Include="System.Memory.Data.dll" />
+  </ItemGroup>
+```
+
 ## Contributing
 
 If you'd like to contribute to this project, please fork the repository and submit a pull request. We welcome contributions of all kinds, including bug fixes, feature requests, and documentation improvements.
@@ -73,4 +85,4 @@ The code uses a very small portion of code derived from [Octokit.net.extensions]
 
 Besides using [Octokit.Net](https://github.com/octokit/octokit.net) as a dependency, the project also copied some files as well (with some changes) to facilitate Unit testing. Octokit.Net is licensed under the MIT License - Copyright (c) 2023 GitHub, Inc.
 
-The derivations are clearkly marked as such in the source code.
+The derivations are clearly marked as such in the source code.
