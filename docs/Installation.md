@@ -52,7 +52,7 @@ The Issues gate requires the following permissions:
   - Deployments - Read and Write
   - Issues - Read
   - Single File - Read Only
-    - With the path `.github/deployhours-gate.yml`
+    - With the path `.github/issues-gate.yml`
 - Events:
   - Deployment protection rule
 
