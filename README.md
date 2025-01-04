@@ -20,7 +20,7 @@ I've create this sample with a few objectives in mind:
 - Be hosted on the _cheap_ (or free) with usage based costs and without fixed costs.
 - Gates should be user configurable per repository and per environment. The configuration file is a YAML file stored on the repository itself.
 
-And also because I wanted to test [GitHub Copilot X](https://github.com/features/preview/copilot-x) in a real world scenario.
+And also because I wanted to test [GitHub Copilot](https://github.com/features/copilot) in a real world scenario.
 
 ## Hosting
 
