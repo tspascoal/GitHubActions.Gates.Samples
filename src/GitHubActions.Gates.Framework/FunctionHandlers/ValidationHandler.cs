@@ -39,7 +39,7 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
         private static void GenerateDotNetInfo(StringBuilder htmlOutput)
         {
-            htmlOutput.Append("<h2>.NET Version</h2>");
+            htmlOutput.Append("<h2>.NET</h2>");
             htmlOutput.Append("<table>");
             htmlOutput.Append("<tr><th>Property</th><th>Value</th></tr>");
             htmlOutput.Append($"<tr><td>Version</td><td>{System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}</td></tr>");
