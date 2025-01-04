@@ -196,7 +196,7 @@ resource functionAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
       
       // Support for .Net 8 in process (delete after migration to isolated)
       // https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#functions_inproc_net8_enabled
-      FUNCTIONS_INPROC_NET8_ENABLED: 1
+      FUNCTIONS_INPROC_NET8_ENABLED: '1'
 
       SERVICEBUS_CONNECTION__fullyQualifiedNamespace: serviceBusHost
       GHAPP_ID: GHApplicationId
