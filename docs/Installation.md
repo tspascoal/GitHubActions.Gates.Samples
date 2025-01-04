@@ -22,7 +22,7 @@ Fill in the required information for your app, including the name, description, 
    2. `name-of-your-function` is the name of the function that you used when you deployed the function app and needs to be globally unique.
    3. So before setting it here check if it exists (or you change it later if needed).
 1. Under "Webhook secret", enter a secret key that will be used to sign your webhook requests (optional but recommended).
-1. Under "Permissions & events", select the permissions and events that your app will need to access (see [Permissions and Events]#permissions-and-events) below which permissions and events are need for each of the gates).
+1. Under "Permissions & events", select the permissions and events that your app will need to access (see [Permissions and Events](#permissions-and-events) below which permissions and events are need for each of the gates).
 1. Click on "Create GitHub App" to create your app.
 1. Take note of the Application ID in the `General` tab. You will need this later.
 1. Generate a private key by clicking on the `Generate a private key` button. The key will be automatically downloaded, keep the file for later.
