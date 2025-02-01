@@ -28,12 +28,12 @@ jobs:
           fetch-depth: 0
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@87b7050bc53ea08284295505d98d2aa94301e852
+        uses: actions/setup-dotnet@3951f0dfe7a07e2313ec93c75700083e2005cbab
         with:
           global-json-file: global.json
 
       - name: Setup Java JDK
-        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           java-version: 17
           distribution: zulu
@@ -89,7 +89,7 @@ jobs:
           cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728
         if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         with:
           recreate: true
@@ -118,7 +118,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@87b7050bc53ea08284295505d98d2aa94301e852
+        uses: actions/setup-dotnet@3951f0dfe7a07e2313ec93c75700083e2005cbab
         with:
           global-json-file: global.json
 
