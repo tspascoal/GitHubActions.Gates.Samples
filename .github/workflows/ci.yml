@@ -89,7 +89,7 @@ jobs:
           cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db
+        uses: marocchino/sticky-pull-request-comment@d2ad0de260ae8b0235ce059e63f2949ba9e05943
         if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         with:
           recreate: true
@@ -123,7 +123,7 @@ jobs:
           global-json-file: global.json
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@ff0a06e83cb2de871e5a09832bc6a81e7276941f #v3.28.18
+        uses: github/codeql-action/init@181d5eefc20863364f96762470ba6f862bdef56b #v3.29.2
         with:
           languages: csharp
           queries: +security-extended,security-experimental,security-and-quality
@@ -135,6 +135,6 @@ jobs:
         run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@ff0a06e83cb2de871e5a09832bc6a81e7276941f #v3.28.18
+        uses: github/codeql-action/analyze@181d5eefc20863364f96762470ba6f862bdef56b #v3.29.2
         with:
           category: "/language:csharp"
