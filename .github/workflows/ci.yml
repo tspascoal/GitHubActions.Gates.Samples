@@ -41,15 +41,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/GitHubActions.Gates.Samples.sln
 
-      - name: sonar begin
-        if: github.actor != 'dependabot[bot]'
-        run: |
-          dotnet tool install --global dotnet-sonarscanner --version 5.14.0
-          dotnet sonarscanner begin \
-          /o:${{ vars.SONAR_ORG }} \
-          /k:tspascoal_GitHubActions.Gates.Samples \
-          /d:sonar.host.url=https://sonarcloud.io
-
       - name: Build
         run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
 
@@ -94,13 +85,6 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
-
-      - name: sonar end
-        if: github.actor != 'dependabot[bot]'
-        run: dotnet sonarscanner end
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   code-scan:
     permissions:
