@@ -70,7 +70,7 @@ namespace DeployHours.Gate.Models
             {
                 if (rule.DeploySlots == null || rule.DeploySlots.Count == 0)
                 {
-                    validatorErrors.Add($"DeployHours element is mandatory (environment: {rule.Environment ?? "ANY"})");
+                    validatorErrors.Add($"DeployHours element is mandatory (environment: {(String.IsNullOrWhiteSpace(rule.Environment) ? "ANY" : rule.Environment)})");
                 }
                 else
                 {

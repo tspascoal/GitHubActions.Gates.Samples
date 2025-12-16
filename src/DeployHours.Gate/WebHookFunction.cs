@@ -1,21 +1,25 @@
+using GitHubActions.Gates.Framework.FunctionHandlers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using GitHubActions.Gates.Framework.FunctionHandlers;
 
 namespace DeployHours.Gate
 {
     public class WebHookFunction : WebHookHandler
     {
-        [FunctionName("DeployHoursGate")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log)
+        private readonly ILogger<WebHookFunction> _logger;
+
+        public WebHookFunction(ILogger<WebHookFunction> logger)
         {
-            return await ProcessWebHook(req, log, Constants.ProcessQueueName);
+            _logger = logger;
+        }
+
+        [Function("DeployHoursGate")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
+        {
+            return await ProcessWebHook(req, _logger, Constants.ProcessQueueName);
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using GitHubActions.Gates.Framework.Exceptions;
-using GitHubActions.Gates.Framework.Clients;
-using Issues.Gate.Models;
-using System;
-using System.Threading.Tasks;
-using System.Text;
-using GitHubActions.Gates.Framework.Models;
+﻿using System.Text;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
+
+using GitHubActions.Gates.Framework.Exceptions;
+using GitHubActions.Gates.Framework.Clients;
+using Issues.Gate.Models;
+using GitHubActions.Gates.Framework.Models;
 
 // Needed for unit tests
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
@@ -63,6 +62,11 @@ namespace Issues.Gate.Rules
 
         internal async virtual Task ExecuteIssuesQuery(Repo Repository, IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
         {
+            if (rule.Issues == null)
+            {
+                throw new ArgumentNullException(nameof(rule.Issues), "Issues rule configuration cannot be null");
+            }
+
             var repo = rule.Issues.Repo != null ? new Repo(rule.Issues.Repo) : Repository;
 
             var graphQLQuery = $@"query($owner: String!, $repo: String!, $limit: Int, $states: [IssueState!] = OPEN, $assignee: String, $author: String, $mention: String, $milestone: String, $labels: [String!], $since: DateTime) {{
@@ -80,15 +84,15 @@ namespace Issues.Gate.Rules
 
             try
             {
-                dynamic response = await _client.GraphQLAsync(graphQLQuery, parameters);
+                dynamic? response = await _client.GraphQLAsync(graphQLQuery, parameters);
 
-                int nrIssues = response.data.repository.total.totalCount;
+                int nrIssues = response?.data?.repository?.total?.totalCount ?? 0;
 
-                _log.LogInformation($"IssuesQuery: Total {nrIssues} After {response.data.repository.after.totalCount} issues with max {rule.Issues.MaxAllowed}");
+                _log.LogInformation($"IssuesQuery: Total {nrIssues} After {response?.data?.repository?.after?.totalCount ?? 0} issues with max {rule.Issues.MaxAllowed}");
 
                 if (rule.Issues.OnlyCreatedBeforeWorkflowCreated)
                 {
-                    nrIssues -= (int)response.data.repository.after.totalCount;
+                    nrIssues -= (int)(response?.data?.repository?.after?.totalCount ?? 0);
                 }
 
                 if (nrIssues > rule.Issues.MaxAllowed)
@@ -112,14 +116,20 @@ namespace Issues.Gate.Rules
         }
         internal async virtual Task ExecuteSearchQuery(IssueGateRule rule, DateTime? workflowCreatedAt, StringBuilder comment)
         {
+            if (rule.Search == null)
+            {
+                throw new ArgumentNullException(nameof(rule.Search), "Issues rule configuration cannot be null");
+            }
+
             string query = BuildSearchQuery(rule, workflowCreatedAt);
+
 
             try
             {
-                dynamic response = await _client.GraphQLAsync("query($type: SearchType!, $limit: Int, $query: String!) { search(type: $type, first: $limit, query: $query) { issueCount } }",
-                                                              new { limit = 0, query, type = "ISSUE" });
+                dynamic? response = await _client.GraphQLAsync("query($type: SearchType!, $limit: Int, $query: String!) { search(type: $type, first: $limit, query: $query) { issueCount } }",
+                                                      new { limit = 0, query, type = "ISSUE" });
 
-                int nrSearchIssues = response.data.search.issueCount;
+                int nrSearchIssues = response?.data?.search?.issueCount ?? 0;
 
                 _log.LogInformation($"SearchQuery: ${nrSearchIssues} issues max ${rule.Search.MaxAllowed}");
 
@@ -146,6 +156,15 @@ namespace Issues.Gate.Rules
 
         internal static string BuildSearchQuery(IssueGateRule rule, DateTime? workflowCreatedAt)
         {
+            if (rule.Search == null)
+            {
+                throw new ArgumentNullException(nameof(rule.Search), "Search rule configuration cannot be null");
+            }
+            if (rule.Search.Query == null)
+            {
+                throw new ArgumentNullException(nameof(rule.Search.Query), "Search query cannot be null");
+            }
+
             var query = rule.Search.Query;
             query += rule.Search.OnlyCreatedBeforeWorkflowCreated && workflowCreatedAt != null ? $" created:<{workflowCreatedAt.Value.ToUniversalTime():o}" : "";
 

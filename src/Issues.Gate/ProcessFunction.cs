@@ -1,24 +1,27 @@
-using System.Threading.Tasks;
 using GitHubActions.Gates.Framework;
-using GitHubActions.Gates.Framework.Clients;
 using GitHubActions.Gates.Framework.FunctionHandlers;
 using GitHubActions.Gates.Framework.Models;
 using GitHubActions.Gates.Framework.Models.WebHooks;
 using Issues.Gate.Models;
 using Issues.Gate.Rules;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Issues.Gate
 {
     public class ProcessFunction : ProcessingHandler<IssuesConfiguration, IssueGateRule>
     {
-        public ProcessFunction() : base("Issues Gate", Constants.ProcessQueueName, ".github/issues-gate.yml") { }
+        private readonly ILogger<ProcessFunction> _logger;
 
-        [FunctionName("IssuesProcess")]
-        public async Task Run([ServiceBusTrigger(Constants.ProcessQueueName, Connection = Config.SERVICEBUSCONNECTIONNAME)] EventMessage message, ILogger log)
+        public ProcessFunction(ILogger<ProcessFunction> logger) : base("Issues Gate", Constants.ProcessQueueName, ".github/issues-gate.yml")
         {
-            await ProcessProcessing(message, log);
+            _logger = logger;
+        }
+
+        [Function("IssuesProcess")]
+        public async Task Run([ServiceBusTrigger(Constants.ProcessQueueName, Connection = Config.SERVICEBUSCONNECTIONNAME)] EventMessage message)
+        {
+            await ProcessProcessing(message, _logger);
         }
 
         /// <summary>

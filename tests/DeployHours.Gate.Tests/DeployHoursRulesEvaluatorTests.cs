@@ -16,7 +16,7 @@ namespace DeployHours.Gate.Tests
                 {
                     new DeployHoursRule
                     {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -77,7 +77,7 @@ namespace DeployHours.Gate.Tests
                 {
                     new DeployHoursRule
                     {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                           new DeploySlotRange
@@ -113,7 +113,7 @@ namespace DeployHours.Gate.Tests
                 Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                    Environment = null,
+                    Environment = String.Empty,
                     DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -142,7 +142,7 @@ namespace DeployHours.Gate.Tests
                 Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                                 new DeploySlotRange
@@ -172,7 +172,7 @@ namespace DeployHours.Gate.Tests
                 Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -207,7 +207,7 @@ namespace DeployHours.Gate.Tests
                 Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -231,6 +231,43 @@ namespace DeployHours.Gate.Tests
             var isDeployHour2 = evaluator.IsDeployHour(new DateTime(2023, 1, 2, 19, 59, 0), "dummy");
 
             Assert.True(isDeployHour1);
+            Assert.True(isDeployHour2);
+        }
+
+        [Fact]
+        public void IsDeployHour_WithNullStartSkipsRange()
+        {
+            var deployHours = new DeployHoursConfiguration()
+            {
+                Lockout = false,
+                Rules = new List<DeployHoursRule>
+                {
+                    new DeployHoursRule
+                    {
+                        Environment = String.Empty,
+                        DeploySlots = new List<DeploySlotRange>
+                        {
+                            new DeploySlotRange
+                            {
+                                Start = null,
+                                End = new TimeOnly(12, 0, 0)
+                            },
+                            new DeploySlotRange
+                            {
+                                Start = new TimeOnly(13, 0, 0),
+                                End = new TimeOnly(17, 0, 0)
+                            }
+                        }
+                    }
+                }
+            };
+
+            var evaluator = new DeployHoursRulesEvaluator(deployHours);
+
+            var isDeployHour1 = evaluator.IsDeployHour(new DateTime(2023, 1, 2, 10, 0, 0), "dummy");
+            var isDeployHour2 = evaluator.IsDeployHour(new DateTime(2023, 1, 2, 14, 0, 0), "dummy");
+
+            Assert.False(isDeployHour1);
             Assert.True(isDeployHour2);
         }
 
@@ -307,7 +344,7 @@ namespace DeployHours.Gate.Tests
                     Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -342,7 +379,7 @@ namespace DeployHours.Gate.Tests
                     Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -377,7 +414,7 @@ namespace DeployHours.Gate.Tests
                     Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
                             new DeploySlotRange
@@ -418,7 +455,7 @@ namespace DeployHours.Gate.Tests
                     Rules = new List<DeployHoursRule>
                 {
                     new DeployHoursRule {
-                        Environment = null,
+                        Environment = String.Empty,
                         DeploySlots =  new List<DeploySlotRange>
                         {
 
@@ -443,6 +480,42 @@ namespace DeployHours.Gate.Tests
                 var nextBusinessHour = evaluator.GetNextDeployHour(new DateTime(2023, 1, 2, 17, 12, 0), "dummy");
 
                 Assert.Equal(new DateTime(2023, 1, 9, 9, 0, 0), nextBusinessHour);
+            }
+
+            [Fact]
+            public void ThrowsExceptionWhenNoValidStartTime()
+            {
+                var businessHours = new DeployHoursConfiguration()
+                {
+                    Lockout = false,
+                    Rules = new List<DeployHoursRule>
+                    {
+                        new DeployHoursRule
+                        {
+                            Environment = "production",
+                            DeploySlots = new List<DeploySlotRange>
+                            {
+                                new DeploySlotRange
+                                {
+                                    Start = null,
+                                    End = new TimeOnly(12, 0, 0)
+                                },
+                                new DeploySlotRange
+                                {
+                                    Start = null,
+                                    End = new TimeOnly(17, 0, 0)
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var evaluator = new DeployHoursRulesEvaluator(businessHours);
+
+                var rejectException = Assert.Throws<RejectException>(() => 
+                    evaluator.GetNextDeployHour(new DateTime(2023, 1, 2, 10, 0, 0), "production"));
+                
+                Assert.Equal("No deploy slot with a valid start time found for production environment", rejectException.Message);
             }
 
         }

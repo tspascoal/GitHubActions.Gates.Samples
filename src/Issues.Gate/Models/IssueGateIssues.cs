@@ -1,21 +1,18 @@
-﻿using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Issues.Gate.Models
 {
     public class IssueGateIssues
     {        
         public int MaxAllowed { get; set; }
-        public string Repo { get; set; }
-        public string State { get; set; }
-        public string Assignee { get; set; }
-        public string Author { get; set; }
-        public string Mention { get; set; }
-        public string Milestone { get; set; }
-        public List<string> Labels { get; set; }
-        public string Message { get; set; }
+        public string? Repo { get; set; }
+        public string? State { get; set; }
+        public string? Assignee { get; set; }
+        public string? Author { get; set; }
+        public string? Mention { get; set; }
+        public string? Milestone { get; set; }
+        public List<string>? Labels { get; set; }
+        public string? Message { get; set; }
         public bool OnlyCreatedBeforeWorkflowCreated { get; set; }
 
         public IList<string> Validate()
@@ -55,7 +52,7 @@ namespace Issues.Gate.Models
             return errors;
         }
 
-        private static void ValidateRepo(string repo, List<string> errors)
+        private static void ValidateRepo(string? repo, List<string> errors)
         {
             if (repo == null) return;
             

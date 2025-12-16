@@ -1,6 +1,5 @@
-using System.Net;
 using System.Text;
-using Octokit;
+using Microsoft.CSharp.RuntimeBinder;
 using Moq;
 
 using GitHubActions.Gates.Framework.Clients;
@@ -8,13 +7,8 @@ using GitHubActions.Gates.Framework.Models;
 using Issues.Gate.Models;
 using Issues.Gate.Rules;
 using GitHubActions.TestHelpers;
-using Newtonsoft.Json;
 using GitHubActions.Gates.Framework.Exceptions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using GitHubActions.Gates.Framework;
 using GitHubActions.TestHelpers.Assert;
-using Microsoft.CSharp.RuntimeBinder;
-using System.Data;
 
 namespace Issues.Gate.Tests
 {
@@ -134,7 +128,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, _) = Factories.CreateGitHubClientForGraphl(log, graphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var exception = await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ExecuteSearchQuery(rule, null, comment));
 
@@ -158,7 +152,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, _) = Factories.CreateGitHubClientForGraphl(log, graphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var exception = await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ExecuteSearchQuery(rule, null, comment));
 
@@ -183,7 +177,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, var octoClientMock) = Factories.CreateGitHubClientForGraphl(log, graphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 await evaluator.ExecuteSearchQuery(rule, null, comment);
 
@@ -215,7 +209,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, var octoClientMock) = Factories.CreateGitHubClientForGraphl(log, graphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var workflowCreatedAt = new DateTime(2023, 10, 12, 7, 54, 0, 0, DateTimeKind.Utc);
 
@@ -270,7 +264,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, _) = Factories.CreateGitHubClientForGraphl(log, issuesGraphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var exception = await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ExecuteIssuesQuery(new Repo("mona/lisa"), rule, workflowCreatedAt, comment));
 
@@ -307,7 +301,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, _) = Factories.CreateGitHubClientForGraphl(log, issuesGraphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var exception = await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ExecuteIssuesQuery(new Repo("mona/lisa"), rule, workflowCreatedAt, comment));
 
@@ -345,7 +339,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, _) = Factories.CreateGitHubClientForGraphl(log, issuesGraphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 var exception = await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ExecuteIssuesQuery(new Repo("mona/lisa"), rule, workflowCreatedAt, comment));
 
@@ -384,7 +378,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, var octoClientMock) = Factories.CreateGitHubClientForGraphl(log, issuesGraphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 await evaluator.ExecuteIssuesQuery(new Repo("mona/lisa"), rule, workflowCreatedAt, comment);
 
@@ -424,7 +418,7 @@ namespace Issues.Gate.Tests
 
                 (var gitHubAppClientMock, var octoClientMock) = Factories.CreateGitHubClientForGraphl(log, issuesGraphQLQuery, graphQLVars, expectedGraphQLResponse);
 
-                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, null);
+                var evaluator = new IssueGateRulesEvaluator(gitHubAppClientMock.Object, log.Object, new IssuesConfiguration());
 
                 await evaluator.ExecuteIssuesQuery(new Repo("mona/lisa"), rule, workflowCreatedAt, comment);
 
@@ -447,7 +441,8 @@ namespace Issues.Gate.Tests
                 };
                 var log = Factories.CreateLoggerMock();
 
-                var evaluator = new IssueGateRulesEvaluator(null, log.Object, configuration);
+                var dummyClient = new Mock<IGitHubAppClient>().Object;
+                var evaluator = new IssueGateRulesEvaluator(dummyClient, log.Object, configuration);
 
                 await Assert.ThrowsAsync<RejectException>(async () => await evaluator.ValidateRules("dummy", new Repo("mona/lisa"), 0L));
             }

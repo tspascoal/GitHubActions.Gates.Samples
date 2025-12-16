@@ -1,22 +1,26 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using GitHubActions.Gates.Framework.FunctionHandlers;
 
 namespace Issues.Gate
 {
-    public class ValidateSettings: ValidationHandler
+    public class ValidateSettings : ValidationHandler
     {
+        private readonly ILogger<ValidateSettings> _logger;
 
-        [FunctionName("ValidateSettings")]
-        public async static Task<ContentResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
-            ILogger log) 
+        public ValidateSettings(ILogger<ValidateSettings> logger)
         {
-            return await Validate(req, log);
+            _logger = logger;
+        }
+
+        [Function("ValidateSettings")]
+        public async Task<ContentResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+        {
+            return await Validate(req, _logger);
         }
     }
 }

@@ -23,8 +23,8 @@ namespace Issues.Gate.Tests
                 Assert.Single(config.Rules);
                 Assert.Null(config.Rules[0].Environment);
                 Assert.NotNull(config.Rules[0].Search);
-                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+                Assert.Equal(5, config.Rules[0].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search!.Query);
             }
 
             [Fact]
@@ -45,8 +45,8 @@ namespace Issues.Gate.Tests
                 Assert.Single(config.Rules);
                 Assert.Equal("production", config.Rules[0].Environment);
                 Assert.NotNull(config.Rules[0].Search);
-                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
+                Assert.Equal(5, config.Rules[0].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search!.Query);
             }
 
             [Fact]
@@ -73,15 +73,15 @@ namespace Issues.Gate.Tests
 
                 Assert.Null(config.Rules[0].Environment);
                 Assert.NotNull(config.Rules[0].Search);
-                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-                Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(5, config.Rules[0].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search!.Query);
+                Assert.False(config.Rules[0].Search!.OnlyCreatedBeforeWorkflowCreated);
 
                 Assert.Equal("production", config.Rules[1].Environment);
                 Assert.NotNull(config.Rules[1].Search);
-                Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
-                Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(1, config.Rules[1].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search!.Query);
+                Assert.True(config.Rules[1].Search!.OnlyCreatedBeforeWorkflowCreated);
             }
 
             [Fact]
@@ -122,26 +122,26 @@ namespace Issues.Gate.Tests
 
                 Assert.Null(config.Rules[0].Environment);
                 Assert.NotNull(config.Rules[0].Search);
-                Assert.Equal(5, config.Rules[0].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search.Query);
-                Assert.False(config.Rules[0].Search.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(5, config.Rules[0].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:bug", config.Rules[0].Search!.Query);
+                Assert.False(config.Rules[0].Search!.OnlyCreatedBeforeWorkflowCreated);
 
                 Assert.Equal("production", config.Rules[1].Environment);
                 Assert.NotNull(config.Rules[1].Search);
-                Assert.Equal(1, config.Rules[1].Search.MaxAllowed);
-                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search.Query);
-                Assert.True(config.Rules[1].Search.OnlyCreatedBeforeWorkflowCreated);
-                Assert.Equal(0, config.Rules[1].Issues.MaxAllowed);
-                Assert.Equal("OPEN", config.Rules[1].Issues.State);
-                Assert.Equal("mona/lisa", config.Rules[1].Issues.Repo);
-                Assert.Equal("octocat", config.Rules[1].Issues.Assignee);
-                Assert.Equal("octocat", config.Rules[1].Issues.Author);
-                Assert.Equal("mona/security", config.Rules[1].Issues.Mention);
-                Assert.Equal("1", config.Rules[1].Issues.Milestone);
-                Assert.Equal(2, config.Rules[1].Issues.Labels.Count);
-                Assert.Equal("BUG", config.Rules[1].Issues.Labels[0]);
-                Assert.Equal("show-stopper", config.Rules[1].Issues.Labels[1]);
-                Assert.True(config.Rules[1].Issues.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(1, config.Rules[1].Search!.MaxAllowed);
+                Assert.Equal("is:open is:issue label:critical", config.Rules[1].Search!.Query);
+                Assert.True(config.Rules[1].Search!.OnlyCreatedBeforeWorkflowCreated);
+                Assert.Equal(0, config.Rules[1].Issues!.MaxAllowed);
+                Assert.Equal("OPEN", config.Rules[1].Issues!.State);
+                Assert.Equal("mona/lisa", config.Rules[1].Issues!.Repo);
+                Assert.Equal("octocat", config.Rules[1].Issues!.Assignee);
+                Assert.Equal("octocat", config.Rules[1].Issues!.Author);
+                Assert.Equal("mona/security", config.Rules[1].Issues!.Mention);
+                Assert.Equal("1", config.Rules[1].Issues!.Milestone);
+                Assert.Equal(2, config.Rules[1].Issues!.Labels!.Count);
+                Assert.Equal("BUG", config.Rules[1].Issues!.Labels![0]);
+                Assert.Equal("show-stopper", config.Rules[1].Issues!.Labels![1]);
+                Assert.True(config.Rules[1].Issues!.OnlyCreatedBeforeWorkflowCreated);
             }
 
             [Fact]
@@ -160,8 +160,8 @@ namespace Issues.Gate.Tests
 
                 Assert.Equal("production", config.Rules[0].Environment);
                 Assert.NotNull(config.Rules[0].Issues);
-                Assert.Equal(0, config.Rules[0].Issues.MaxAllowed);
-                Assert.Null(config.Rules[0].Issues.Milestone);
+                Assert.Equal(0, config.Rules[0].Issues!.MaxAllowed);
+                Assert.Null(config.Rules[0].Issues!.Milestone);
             }
         }
 

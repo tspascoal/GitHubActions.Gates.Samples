@@ -32,6 +32,7 @@ namespace Issues.Gate.Models
         //      - BUG
         //      - show-stopper
 
+
         public override IList<string> Validate()
         {
             var validatorErrors = new List<string>();
@@ -48,7 +49,7 @@ namespace Issues.Gate.Models
                 {
                     if(rule.Search == null && rule.Issues == null)
                     {
-                        validatorErrors.Add($"Rules for Environment: {rule.Environment ?? "ANY"} has no Search or Rules element");
+                        validatorErrors.Add($"Rules for Environment: {(String.IsNullOrWhiteSpace(rule.Environment) ? "ANY" : rule.Environment)} has no Search or Rules element");
                         continue;
                     }
 
