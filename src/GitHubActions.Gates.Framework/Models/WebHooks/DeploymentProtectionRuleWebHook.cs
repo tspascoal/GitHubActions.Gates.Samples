@@ -25,7 +25,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     public class Deployment
     {
         public string url { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string task { get; set; }
         public string original_environment { get; set; }
@@ -48,7 +48,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     public class Creator
     {
         public string login { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string avatar_url { get; set; }
         public string gravatar_id { get; set; }
@@ -75,7 +75,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage()]
     public class Performed_Via_Github_App
     {
-        public int id { get; set; }
+        public long id { get; set; }
         public string slug { get; set; }
         public string node_id { get; set; }
         public Owner owner { get; set; }
@@ -114,7 +114,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage()]
     public class Repository
     {
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string name { get; set; }
         public string full_name { get; set; }
@@ -199,7 +199,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     public class Owner1
     {
         public string login { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string avatar_url { get; set; }
         public string gravatar_id { get; set; }
@@ -221,7 +221,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     public class Organization
     {
         public string login { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string url { get; set; }
         public string repos_url { get; set; }
@@ -238,7 +238,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     public class Sender
     {
         public string login { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
         public string avatar_url { get; set; }
         public string gravatar_id { get; set; }
@@ -260,7 +260,7 @@ namespace GitHubActions.Gates.Framework.Models.WebHooks
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage()]
     public class Installation
     {
-        public int id { get; set; }
+        public long id { get; set; }
         public string node_id { get; set; }
     }
 }

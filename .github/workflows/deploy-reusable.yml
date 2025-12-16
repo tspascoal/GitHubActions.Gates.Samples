@@ -80,36 +80,10 @@ jobs:
           tenant-id: ${{ secrets.tenant-id }}
           subscription-id: ${{ secrets.subscription-id }}
 
-      # The next 2 steps are a workaround for:
-      # https://github.com/Azure/functions-action/issues/116
-      - name: Get ${{ env.FUNCTION_APP_NAME }} Id
-        id: getFunctionID
-        run: |
-          functionId=$(az resource list --resource-type Microsoft.Web/sites --query "[?kind=='functionapp' && name=='${{ env.FUNCTION_APP_NAME }}']|[0].id" --output tsv)
-          if [ -z "$functionId" ]; then
-            echo "Function App ${{ env.FUNCTION_APP_NAME }} not found"
-            echo "These are the available resources to the service principal:"
-            az resource list
-            exit 1
-          fi
-          echo "functionId=$functionId" >> $GITHUB_OUTPUT
-      - name: Retrieve publish profile for deployment
-        id: getPublishProfile
-        run: |
-          functionId="${{ steps.getFunctionID.outputs.functionId }}"
-          echo "getting publish profile for $functionId"
-          publishProfiles=$(az webapp deployment list-publishing-profiles --ids "$functionId" --xml)
-          echo "::add-mask::$publishProfiles"
-          echo "publishProfiles<<EOF" >> $GITHUB_OUTPUT
-          echo "$publishProfiles" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-
       - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
         uses: Azure/functions-action@0bd707f87c0b6385742bab336c74e1afc61f6369
         id: deployFunction
         with:
-          publish-profile: ${{ steps.getPublishProfile.outputs.publishProfiles }}
           app-name: ${{ env.FUNCTION_APP_NAME }}
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
 

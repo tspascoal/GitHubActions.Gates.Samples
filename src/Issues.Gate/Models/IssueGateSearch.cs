@@ -5,8 +5,8 @@ namespace Issues.Gate.Models
     public class IssueGateSearch
     {
         public int MaxAllowed { get; set; }
-        public string Query { get; set; }
-        public string Message { get; set; }
+        public string? Query { get; set; }
+        public string? Message { get; set; }
         public bool OnlyCreatedBeforeWorkflowCreated { get; set; }
 
         public IList<string> Validate()

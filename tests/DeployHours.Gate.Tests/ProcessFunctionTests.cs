@@ -3,6 +3,7 @@ using DeployHours.Gate.Rules;
 using DeployHours.Gate.Tests.Helpers;
 using GitHubActions.Gates.Framework.Models;
 using GitHubActions.Gates.Framework.Models.WebHooks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 
@@ -86,12 +87,12 @@ namespace DeployHours.Gate.Tests
             [Fact]
             public async Task CallsBaseProcess()
             {
-                var deployHoursFunctionProcessMock = new Mock<ProcessFunction>() { CallBase = false };
+                var loggerMock = new Mock<ILogger<ProcessFunction>>();
+                var deployHoursFunctionProcessMock = new Mock<ProcessFunction>(loggerMock.Object) { CallBase = false };
 
                 var expectedMessage = new EventMessage { TryNumber = 1 };
-                var log = Factories.CreateLoggerMock();
 
-                await deployHoursFunctionProcessMock.Object.Run(expectedMessage, log.Object);
+                await deployHoursFunctionProcessMock.Object.Run(expectedMessage);
 
                 deployHoursFunctionProcessMock
                     .Protected()
@@ -99,7 +100,7 @@ namespace DeployHours.Gate.Tests
                         "ProcessProcessing",
                         Times.Once(),
                         expectedMessage,
-                        log.Object
+                        ItExpr.IsAny<ILogger>()
                     );
             }
 

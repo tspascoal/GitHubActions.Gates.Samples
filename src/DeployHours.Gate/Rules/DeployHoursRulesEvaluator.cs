@@ -7,7 +7,7 @@ namespace DeployHours.Gate.Rules
 {
     public class DeployHoursRulesEvaluator
     {
-        private readonly DeployHoursConfiguration _deployHoursConfig;
+        private readonly DeployHoursConfiguration _deployHoursConfig = null!;
         internal DeployHoursRulesEvaluator() { }
 
         public DeployHoursRulesEvaluator(DeployHoursConfiguration config)
@@ -35,12 +35,17 @@ namespace DeployHours.Gate.Rules
             var rule = GetRuleOrThrow(Environment);
 
             // Get ordered list of ranges (in case user has not ordered them
-            var sortedRanges = rule.DeploySlots.OrderBy(r => r.Start.Value.ToTimeSpan()).ToList();
+            var sortedRanges = rule.DeploySlots
+                .Where(r => r.Start.HasValue)
+                .OrderBy(r => r.Start!.Value.ToTimeSpan())
+                .ToList();
 
             // Check if current time is within any of the ranges
             foreach (var range in sortedRanges)
             {
-                if (currentTime.TimeOfDay >= range.Start.Value.ToTimeSpan() && currentTime.TimeOfDay <= range.End.Value.ToTimeSpan())
+                if (range.Start.HasValue && range.End.HasValue &&
+                    currentTime.TimeOfDay >= range.Start.Value.ToTimeSpan() &&
+                    currentTime.TimeOfDay <= range.End.Value.ToTimeSpan())
                 {
                     return true;
                 }
@@ -53,30 +58,41 @@ namespace DeployHours.Gate.Rules
             var rule = GetRuleOrThrow(Environment);
             var nextTime = currentTime.AddDays(0);
 
-            // Get first range of the day
-            var firstHourRange = rule.DeploySlots.OrderBy(r => r.Start.Value.ToTimeSpan()).First();
+            // Only consider ranges where Start is not null
+            var firstHourRange = rule.DeploySlots
+                .Where(r => r.Start.HasValue)
+                .OrderBy(r => r.Start!.Value.ToTimeSpan())
+                .FirstOrDefault();
+
+            if (firstHourRange == null)
+            {
+                throw new RejectException($"No deploy slot with a valid start time found for {Environment ?? "Any Environment"} environment");
+            }
 
             //TODO: optimize so we are not constantly getting data for environments
             while (!IsDeployHour(nextTime, Environment))
             {
                 // If it's not a working day, move to the next day
-                // We could be clever and look at working days, but this is fast enough
                 if (!IsDeployDay(nextTime))
                 {
-                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, firstHourRange.Start.Value.Hour, firstHourRange.Start.Value.Minute, firstHourRange.Start.Value.Second, DateTimeKind.Utc).AddDays(1);
+                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, firstHourRange.Start!.Value.Hour, firstHourRange.Start!.Value.Minute, firstHourRange.Start!.Value.Second, DateTimeKind.Utc).AddDays(1);
                     continue;
                 }
 
                 // If it's a working day, move to the next deploy hour range
-                var nextRange = rule.DeploySlots.FirstOrDefault(r => r.Start.Value.ToTimeSpan() > nextTime.TimeOfDay);
+                var nextRange = rule.DeploySlots
+                    .Where(r => r.Start.HasValue && r.Start.Value.ToTimeSpan() > nextTime.TimeOfDay)
+                    .OrderBy(r => r.Start!.Value.ToTimeSpan())
+                    .FirstOrDefault();
+
                 if (nextRange != null)
                 {
-                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, nextRange.Start.Value.Hour, nextRange.Start.Value.Minute, nextRange.Start.Value.Second, DateTimeKind.Utc);
+                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, nextRange.Start!.Value.Hour, nextRange.Start!.Value.Minute, nextRange.Start!.Value.Second, DateTimeKind.Utc);
                 }
                 else
                 {
                     // If there is no next range, move to the next day
-                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, firstHourRange.Start.Value.Hour, firstHourRange.Start.Value.Minute, firstHourRange.Start.Value.Second, DateTimeKind.Utc).AddDays(1);
+                    nextTime = new DateTime(nextTime.Year, nextTime.Month, nextTime.Day, firstHourRange.Start!.Value.Hour, firstHourRange.Start!.Value.Minute, firstHourRange.Start!.Value.Second, DateTimeKind.Utc).AddDays(1);
                 }
             }
 

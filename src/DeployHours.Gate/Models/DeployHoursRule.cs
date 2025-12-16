@@ -5,9 +5,8 @@ namespace DeployHours.Gate.Models
 {
     public class DeployHoursRule : IGatesRule
     {
-        public string Environment { get; set; }
-        public IList<DeploySlotRange> DeploySlots { get; internal set; }
-
+        public string Environment { get; set; } = string.Empty;
+        public IList<DeploySlotRange> DeploySlots { get; internal set; } = new List<DeploySlotRange>();
         public int WaitMinutes { get; set; }
     }
 }

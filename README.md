@@ -26,7 +26,7 @@ And also because I wanted to test [GitHub Copilot](https://github.com/features/c
 
 I don't provide any hosting for this project so it needs to be self hosted in order to be used. 
 
-The project is implemented as .Net Core 8 Azure Functions and can be hosted on Azure Functions or any other hosting provider that supports .Net Core 6 Azure Functions but it requires an [Azure Service Bus]([https://](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview)) instance.
+The project is implemented as .Net Core 10 Azure Functions and can be hosted on Azure Functions or any other hosting provider that supports .Net Core Azure Functions but it requires an [Azure Service Bus]([https://](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview)) instance.
 
 Optionally it can use [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for monitoring and logging.
 
@@ -43,25 +43,11 @@ See the [installation guide](docs/Installation.md) for instructions on how to in
 > [!Warning]
 > Upgrading from version 1 to version 2, requires a configuration change.
 
-Since version 2 now uses .NET 8 (but since it hasn't been upgraded yet to use [Isolated mode](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide) yet) it requires a setting `FUNCTIONS_INPROC_NET8_ENABLED` with the value `1` in the function(s) configuration.
-
 The provided bicep files, sets the necessary settings.
 
 ## Configuring the gates
 
 See the [configuration guide](docs/Configuration.md) for instructions on how to configure the gates.
-
-## Known Issues
-
-With .NET 8 in-process model, Azure Functions are (currently) failing with a ` Could not load file or assembly 'System.Memory.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=...'. because of some Azure Nuget packages.
-
-This is currently documented in Azure Function open issues [#1](https://github.com/Azure/azure-functions-host/issues/10575) and [#2](https://github.com/Azure/azure-functions-host/issues/10567), as a workaround the functions `.csproj` have this setting configured 
-
-```xml
-  <ItemGroup>
-    <FunctionsPreservedDependencies Include="System.Memory.Data.dll" />
-  </ItemGroup>
-```
 
 ## Contributing
 

@@ -45,6 +45,7 @@ namespace DeployHours.Gate.Tests
 
             Assert.NotNull(config.Rules);
             Assert.Single(config.Rules);
+            Assert.True(string.IsNullOrEmpty(config.Rules[0].Environment));
             Assert.Single(config.Rules[0].DeploySlots);
             Assert.Equal(new TimeOnly(1, 46, 40), config.Rules[0].DeploySlots[0].Start);
             Assert.Equal(new TimeOnly(12, 43, 40), config.Rules[0].DeploySlots[0].End);
@@ -67,6 +68,7 @@ namespace DeployHours.Gate.Tests
             Assert.False(config.Lockout);
 
             Assert.NotNull(config.Rules);
+            Assert.True(string.IsNullOrEmpty(config.Rules[0].Environment));
             Assert.Equal(2, config.Rules[0].DeploySlots.Count);
             Assert.Equal(new TimeOnly(1, 46, 40), config.Rules[0].DeploySlots[0].Start);
             Assert.Equal(new TimeOnly(12, 46, 40), config.Rules[0].DeploySlots[0].End);
@@ -213,7 +215,7 @@ namespace DeployHours.Gate.Tests
                     new DeployHoursRule
                     {
                         Environment = "production",
-                        DeploySlots = null
+                        DeploySlots = new List<DeploySlotRange>() 
                     }
                 }
             };

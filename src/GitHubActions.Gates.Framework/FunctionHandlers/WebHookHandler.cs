@@ -1,5 +1,4 @@
-﻿
-using GitHubActions.Gates.Framework.Clients;
+﻿using GitHubActions.Gates.Framework.Clients;
 using GitHubActions.Gates.Framework.Models;
 using GitHubActions.Gates.Framework.Models.WebHooks;
 using Microsoft.AspNetCore.Http;
@@ -21,11 +20,10 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 
             log.LogInformation($"EventReceiver Begin: [{ghEvent}] ${id}");
 
-            // No need to wast resources something is definitely missing
+            // No need to waste resources something is definitely missing
             if (string.IsNullOrWhiteSpace(ghEvent))
             {
                 log.LogError("Missing Event");
-                log.LogMetric("Missing Event", 1);
                 return new BadRequestObjectResult("Missing Event");
             }
 
@@ -40,7 +38,6 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
             catch (Exception ex)
             {
                 log.LogError(ex, "Failed HMAC validation.");
-                log.LogMetric("HMAC Validation Failed", 1);
                 return new BadRequestObjectResult(ex.Message);
             }
             try

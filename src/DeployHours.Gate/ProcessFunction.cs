@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 using GitHubActions.Gates.Framework;
@@ -15,7 +15,12 @@ namespace DeployHours.Gate
 {
     public class ProcessFunction : ProcessingHandler<DeployHoursConfiguration, DeployHoursRule>
     {
-        public ProcessFunction() : base("Issues Gate", Constants.ProcessQueueName, ".github/deployhours-gate.yml") { }
+        private readonly ILogger<ProcessFunction> _logger;
+
+        public ProcessFunction(ILogger<ProcessFunction> logger) : base("Issues Gate", Constants.ProcessQueueName, ".github/deployhours-gate.yml")
+        {
+            _logger = logger;
+        }
 
         private const string LockoutMessage = "You can't deploy. We are in Lockout mode.";
         private const string DelayApprovalMessage = "Deploy requested outside deploy hours. Will be automatically approved on next deploy block on **{0:f} UTC**.";
@@ -23,10 +28,10 @@ namespace DeployHours.Gate
         // Just so tests can inject their own rules. Need to find a more elegant solution
         protected virtual DeployHoursRulesEvaluator RulesFactory(DeployHoursConfiguration cfg) => new(cfg);
 
-        [FunctionName("GatesProcess")]
-        public async Task Run([ServiceBusTrigger(Constants.ProcessQueueName, Connection = Config.SERVICEBUSCONNECTIONNAME)] EventMessage message, ILogger log)
+        [Function("GatesProcess")]
+        public async Task Run([ServiceBusTrigger(Constants.ProcessQueueName, Connection = Config.SERVICEBUSCONNECTIONNAME)] EventMessage message)
         {
-            await ProcessProcessing(message, log);
+            await ProcessProcessing(message, _logger);
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using DeployHours.Gate.Models;
 using DeployHours.Gate.Rules;
 using GitHubActions.Gates.Framework.Models.WebHooks;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace DeployHours.Gate.Tests.Helpers
 {
@@ -11,7 +13,8 @@ namespace DeployHours.Gate.Tests.Helpers
     {
         public DeployHoursRulesEvaluator Rules { get; private set; }
 
-        public DeployHoursGateTestableWrapper(DeployHoursRulesEvaluator rules)
+        public DeployHoursGateTestableWrapper(DeployHoursRulesEvaluator rules) 
+            : base(new Mock<ILogger<ProcessFunction>>().Object)
         {
             this.Rules = rules;
         }
