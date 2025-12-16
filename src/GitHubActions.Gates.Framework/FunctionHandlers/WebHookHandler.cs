@@ -13,9 +13,9 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
     public class WebHookHandler
     {
         // Removes carriage return and newline characters to prevent log forging
-        private static string SanitizeForLog(string input)
+        private static string SanitizeForLog(string? input)
         {
-            return input?.Replace("\r", "").Replace("\n", "");
+            return input == null ? string.Empty : input.Replace("\r", "").Replace("\n", "");
         }
         protected const string DeploymentProtectionRuleEventName = "deployment_protection_rule";
         protected virtual async Task<IActionResult> ProcessWebHook(HttpRequest req, ILogger log, string ProcessingQueueName)
