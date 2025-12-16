@@ -12,13 +12,18 @@ namespace GitHubActions.Gates.Framework.FunctionHandlers
 {
     public class WebHookHandler
     {
+        // Removes carriage return and newline characters to prevent log forging
+        private static string SanitizeForLog(string? input)
+        {
+            return input == null ? string.Empty : input.Replace("\r", "").Replace("\n", "");
+        }
         protected const string DeploymentProtectionRuleEventName = "deployment_protection_rule";
         protected virtual async Task<IActionResult> ProcessWebHook(HttpRequest req, ILogger log, string ProcessingQueueName)
         {
             var ghEvent = req.Headers["X-GitHub-Event"].FirstOrDefault();
             var id = req.Headers["X-GitHub-Delivery"].FirstOrDefault();
 
-            log.LogInformation($"EventReceiver Begin: [{ghEvent}] ${id}");
+            log.LogInformation($"EventReceiver Begin: [{SanitizeForLog(ghEvent)}] {SanitizeForLog(id)}");
 
             // No need to waste resources something is definitely missing
             if (string.IsNullOrWhiteSpace(ghEvent))
