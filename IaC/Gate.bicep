@@ -51,6 +51,13 @@ param webHookSecret string = ''
 @description('GitHub webhooks IP addresses.')
 param ghHooksIpAddresses array = []
 
+@description('Maximum instance count for Flex Consumption scaling')
+param maximumInstanceCount int = 100
+
+@description('Instance memory size in MB (512,2048 or 4096 for Flex Consumption)')
+@allowed([512, 2048, 4096])
+param instanceMemoryMB int = 512
+
 var additionalIpSecurityRestrictions = [for (ip,i) in ghHooksIpAddresses: {
   ipAddress: ip
   action: 'Allow'
@@ -63,7 +70,7 @@ var additionalIpSecurityRestrictions = [for (ip,i) in ghHooksIpAddresses: {
 //////////////////////////////////////// Service Bus
 
 // You can use the same service bus for all gates.
-resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-01-01-preview' = {
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
   name: serviceBusNamespaceName
   location: location
   sku: {
@@ -75,7 +82,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-01-01-preview
 }
 
 // Each gate requires it's own queue.
-resource serviceBusQueue 'Microsoft.ServiceBus/namespaces/queues@2022-01-01-preview' = {
+resource serviceBusQueue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01' = {
   parent: serviceBusNamespace
   name: serviceBusQueueName
   properties: {
@@ -134,47 +141,112 @@ resource roleAssignmentDataOwner 'Microsoft.Authorization/roleAssignments@2022-0
 //////////////////////////////////////// FUNCTION APP
 
 var functionAppName = appName
-var hostingPlanName = appName
 var applicationInsightsName = appName
 var storageAccountName = toLower('${appShortName}${uniqueString(resourceGroup().id)}')
-var functionWorkerRuntime = 'dotnet'
+var deploymentStorageContainerName = 'deploymentpackage'
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
+// Storage account for Flex Consumption - requires blob service and container for deployment
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
   location: location
   sku: {
     name: appStorageAccountType
   }
-  kind: 'Storage'
-}
-
-resource hostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
-  name: hostingPlanName
-  location: location
-  sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
-    size: 'Y1'
-    family: 'Y'
+  kind: 'StorageV2'
+  properties: {
+    supportsHttpsTrafficOnly: true
+    defaultToOAuthAuthentication: true
+    allowSharedKeyAccess: false
+    minimumTlsVersion: 'TLS1_2'
+    allowBlobPublicAccess: false
   }
 }
 
-resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+resource deploymentStorageContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = {
+  parent: blobService
+  name: deploymentStorageContainerName
+}
+
+// Flex Consumption hosting plan (FC1 SKU)
+resource hostingPlan 'Microsoft.Web/serverfarms@2024-04-01' = {
+  name: '${appShortName}-plan'
+  location: location
+  sku: {
+    tier: 'FlexConsumption'
+    name: 'FC1'
+  }
+  kind: 'functionapp'
+  properties: {
+    reserved: true // Required for Linux
+  }
+}
+
+// Role assignments for storage account (Flex Consumption uses managed identity for deployment storage)
+var storageBlobDataOwnerRoleId = 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b'
+var storageAccountContributorRoleId = '17d1049b-9a84-46fb-8f53-869881c3d3ab'
+
+resource storageRoleAssignmentBlobOwner 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.name, 'blobowner')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions/', storageBlobDataOwnerRoleId)
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource storageRoleAssignmentContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.name, 'contributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions/', storageAccountContributorRoleId)
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Flex Consumption Function App
+resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
   name: functionAppName
   location: location
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     serverFarmId: hostingPlan.id
+    reserved: true // Required for Linux
     siteConfig: {
-      ftpsState: 'FtpsOnly'
+      ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       ipSecurityRestrictions: additionalIpSecurityRestrictions
       ipSecurityRestrictionsDefaultAction: (length(additionalIpSecurityRestrictions) > 0 ? 'Deny' : 'Allow')
     }
     httpsOnly: true
+    functionAppConfig: {
+      deployment: {
+        storage: {
+          type: 'blobContainer'
+          value: '${storageAccount.properties.primaryEndpoints.blob}${deploymentStorageContainerName}'
+          authentication: {
+            type: 'SystemAssignedIdentity'
+          }
+        }
+      }
+      scaleAndConcurrency: {
+        maximumInstanceCount: maximumInstanceCount
+        instanceMemoryMB: instanceMemoryMB
+      }
+      runtime: {
+        name: 'dotnet-isolated'
+        version: '10.0'
+      }
+    }
   }
 }
 
@@ -182,21 +254,13 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
 // Managed identities in service bus https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-managed-service-identity
 // SB triggers with managed identities https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus-trigger?tabs=python-v2%2Cin-process%2Cextensionv5&pivots=programming-language-csharp#identity-based-connections
 var serviceBusHost = split(uri(serviceBusNamespace.properties.serviceBusEndpoint,''), '/')[2]
-resource functionAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource functionAppSettings 'Microsoft.Web/sites/config@2024-04-01' = {
   name: 'appsettings'
   parent: functionApp
   properties: {
-      AzureWebJobsStorage: '@Microsoft.KeyVault(SecretUri=${KeyFunctionStorageConnectionString.properties.secretUri})'
+      AzureWebJobsStorage__accountName: storageAccountName
       AzureWebJobsDisableHomepage: 'true'
-      WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(SecretUri=${KeyFunctionStorageConnectionString.properties.secretUri})'
-      WEBSITE_CONTENTSHARE: toLower(functionAppName)
-      FUNCTIONS_EXTENSION_VERSION : '~4'
-      APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
-      FUNCTIONS_WORKER_RUNTIME: functionWorkerRuntime
-      
-      // Support for .Net 8 in process (delete after migration to isolated)
-      // https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#functions_inproc_net8_enabled
-      FUNCTIONS_INPROC_NET8_ENABLED: '1'
+      APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
 
       SERVICEBUS_CONNECTION__fullyQualifiedNamespace: serviceBusHost
       GHAPP_ID: GHApplicationId
@@ -217,7 +281,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 
 //////////////////////////////////////// Keyvault
 
-resource vault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
+resource vault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
   location: location
   properties: {
@@ -234,6 +298,8 @@ resource vault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
     ]
     enableRbacAuthorization: false
     enableSoftDelete: false
+    softDeleteRetentionInDays: 90
+    enablePurgeProtection: true
     enabledForDeployment: true
     enabledForDiskEncryption: false
     enabledForTemplateDeployment: true
@@ -252,7 +318,7 @@ resource vault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
 var pemCertificateName = '${appShortName}-PEM-Certificate'
 var webHookSecretName = '${appShortName}-webhooksecret'
 
-resource keyCertificate 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+resource keyCertificate 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: vault
   name: pemCertificateName
   properties: {
@@ -260,19 +326,11 @@ resource keyCertificate 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
   }  
 }
 
-resource keyWebHookSecret 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+resource keyWebHookSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: vault
   name: webHookSecretName
   properties: {
     value: webHookSecret
-  }  
-}
-
-resource KeyFunctionStorageConnectionString 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
-  parent: vault
-  name: 'function-storage-connectionstring'
-  properties: {
-    value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
   }  
 }
 
