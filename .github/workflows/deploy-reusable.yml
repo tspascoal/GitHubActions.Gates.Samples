@@ -81,7 +81,7 @@ jobs:
           subscription-id: ${{ secrets.subscription-id }}
 
       - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
-        uses: Azure/functions-action@ac2abfb0e49d12ed5d273a3cb39f01bdd1654c43
+        uses: Azure/functions-action@bc63708cc6539760eea18d8a7de4ce8ef5fdf593
         id: deployFunction
         with:
           app-name: ${{ env.FUNCTION_APP_NAME }}
