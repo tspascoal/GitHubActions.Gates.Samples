@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
         with:
           global-json-file: global.json
 
@@ -81,7 +81,7 @@ jobs:
           subscription-id: ${{ secrets.subscription-id }}
 
       - name: Deploy Function ${{ env.FUNCTION_APP_NAME }}
-        uses: Azure/functions-action@ac2abfb0e49d12ed5d273a3cb39f01bdd1654c43
+        uses: Azure/functions-action@bc63708cc6539760eea18d8a7de4ce8ef5fdf593
         id: deployFunction
         with:
           app-name: ${{ env.FUNCTION_APP_NAME }}

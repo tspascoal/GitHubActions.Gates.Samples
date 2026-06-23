@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
         with:
           global-json-file: global.json
 
@@ -80,7 +80,7 @@ jobs:
           cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@70d2764d1a7d5d9560b100cbea0077fc8f633987
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0
         if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         with:
           recreate: true
@@ -102,12 +102,12 @@ jobs:
           fetch-depth: 0
 
       - name: Setup DotNet
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
         with:
           global-json-file: global.json
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@c10b8064de6f491fea524254123dbe5e09572f13 #v3.29.5
+        uses: github/codeql-action/init@7211b7c8077ea37d8641b6271f6a365a22a5fbfa #v3.29.5
         with:
           languages: csharp
           queries: +security-extended,security-experimental,security-and-quality
@@ -119,6 +119,6 @@ jobs:
         run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@c10b8064de6f491fea524254123dbe5e09572f13 #v3.29.5
+        uses: github/codeql-action/analyze@7211b7c8077ea37d8641b6271f6a365a22a5fbfa #v3.29.5
         with:
           category: "/language:csharp"
